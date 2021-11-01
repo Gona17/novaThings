@@ -1,0 +1,142 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(early(addPluginSbtFile="""C:\Users\eduro\AppData\Local\Temp\idea.sbt"""), None, None)
+[debug] > Exec(addPluginSbtFile="""C:\Users\eduro\AppData\Local\Temp\idea.sbt""", None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.5.5 (Oracle Corporation Java 1.8.0_291)
+[debug]       Load.loadUnit: plugins took 85.3435ms
+[debug]       Load.loadUnit: defsScala took 0.5341ms
+[debug] [Loading] Scanning directory C:\Users\eduro\.sbt\1.0\plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\eduro\.sbt\1.0\plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 25.9411 ms
+[debug]           Load.resolveProject(global-plugins) took 55.9135ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: C:\Users\eduro\.sbt\1.0\plugins, plugins: List(<none>))) took 122.9822ms
+[debug] [Loading] Done in C:\Users\eduro\.sbt\1.0\plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 152.9226ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.5668ms
+[debug]     Load.loadUnit(file:/C:/Users/eduro/.sbt/1.0/plugins/, ...) took 250.2524ms
+[debug]   Load.apply: load took 663.6745ms
+[debug]   Load.apply: resolveProjects took 6.1411ms
+[debug]   Load.apply: finalTransforms took 49.3255ms
+[debug]   Load.apply: config.delegates took 8.8343ms
+[debug]   Load.apply: Def.make(settings)... took 349.8146ms
+[debug]   Load.apply: structureIndex took 99.2452ms
+[debug]   Load.apply: mkStreams took 1.5921ms
+[info] loading global plugins from C:\Users\eduro\.sbt\1.0\plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 3643.1068ms
+[debug]           Load.loadUnit: plugins took 18.0657ms
+[debug]           Load.loadUnit: defsScala took 0.0025ms
+[debug] [Loading] Scanning directory E:\Escritorio\Nova\parseCSV\project
+[debug]             Load.loadUnit: mkEval took 7.5455ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in E:\Escritorio\Nova\parseCSV\project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 2.4966 ms
+[info] loading settings for project parsecsv-build from idea.sbt ...
+[debug]               Load.resolveProject(parsecsv-build) took 6.56ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id parsecsv-build, base: E:\Escritorio\Nova\parseCSV\project, plugins: List(<none>))) took 9.5884ms
+[debug] [Loading] Done in E:\Escritorio\Nova\parseCSV\project, returning: (parsecsv-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 163.3521ms
+[debug]           Load.loadUnit: cleanEvalClasses took 4.1161ms
+[debug]         Load.loadUnit(file:/E:/Escritorio/Nova/parseCSV/project/, ...) took 186.4225ms
+[debug]       Load.apply: load took 187.5888ms
+[debug]       Load.apply: resolveProjects took 0.1203ms
+[debug]       Load.apply: finalTransforms took 7.1277ms
+[debug]       Load.apply: config.delegates took 0.3685ms
+[debug]       Load.apply: Def.make(settings)... took 76.3583ms
+[debug]       Load.apply: structureIndex took 20.591ms
+[debug]       Load.apply: mkStreams took 0.0029ms
+[info] loading project definition from E:\Escritorio\Nova\parseCSV\project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 554.0645ms
+[debug]     Load.loadUnit: defsScala took 0.0023ms
+[debug] [Loading] Scanning directory E:\Escritorio\Nova\parseCSV
+[debug]       Load.loadUnit: mkEval took 0.2027ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in E:\Escritorio\Nova\parseCSV, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.StructurePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.IdeaShellPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.StructurePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.IdeaShellPlugin)))
+[debug] Clause(And(Set(Atom(sbt.plugins.CorePlugin), Atom(sbt.plugins.JvmPlugin))),Set(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.SemanticdbPlugin,org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin,sbt.plugins.JUnitXmlReportPlugin,org.jetbrains.sbt.IdeaShellPlugin,org.jetbrains.sbt.StructurePlugin,sbt.plugins.MiniDependencyTreePlugin)
+[debug] Plugins.deducer#function took 2.3452 ms
+[info] loading settings for project parsecsv from build.sbt ...
+[debug]         Load.resolveProject(parsecsv) took 21.8151ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id parsecsv, base: E:\Escritorio\Nova\parseCSV, plugins: List(<none>))) took 25.2066ms
+[debug] [Loading] Done in E:\Escritorio\Nova\parseCSV, returning: (parsecsv)
+[debug]     Load.loadUnit: loadedProjectsRaw took 133.2299ms
+[debug]     Load.loadUnit: cleanEvalClasses took 2.114ms
+[debug]   Load.loadUnit(file:/E:/Escritorio/Nova/parseCSV/, ...) took 689.9945ms
+[debug] Load.apply: load took 691.4261ms
+[debug] Load.apply: resolveProjects took 0.1017ms
+[debug] Load.apply: finalTransforms took 19.2397ms
+[debug] Load.apply: config.delegates took 0.2896ms
+[debug] Load.apply: Def.make(settings)... took 57.3026ms
+[debug] Load.apply: structureIndex took 17.3569ms
+[debug] Load.apply: mkStreams took 0.0028ms
+[info] set current project to parseCSV (in build file:/E:/Escritorio/Nova/parseCSV/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(; set ideaPort in Global := 62913 ; idea-shell, None, None)
+[debug] > Exec(set ideaPort in Global := 62913, None, None)
+[info] Defining Global / ideaPort
+[info] The new value will be used by Compile / compile, Test / compile
+[debug] Defining 
+[debug] 	Global / ideaPort
+[debug] 
+[debug] The new value will be used by 
+[debug] 	Compile / compile
+[debug] 	Test / compile
+[info] Reapplying settings...
+[info] set current project to parseCSV (in build file:/E:/Escritorio/Nova/parseCSV/)
+[debug] > Exec(idea-shell, None, None)

@@ -1,0 +1,10 @@
+with tabla as(
+select codigo_empleado,max(fecha_proceso) as maxima_fecha from de_ber_1raw.meta4_empleados group by codigo_empleado
+)
+select count(1)
+from de_ber_1raw.meta4_empleados me 
+INNER JOIN de_ber_2cur.rel_cliente_core_documentos rc 
+ON rc.id_persona = CAST(replace(me.cuil_empleado,'-','') AS BIGINT)
+inner join tabla
+on me.codigo_empleado = tabla.codigo_empleado
+WHERE rc.id_tipo_doc = 35 AND me.fecha_baja_emp IS NULL AND me.banco_filial = 'BER' and me.fecha_proceso = tabla.maxima_fecha;

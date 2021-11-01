@@ -1,0 +1,10 @@
+select  
+sb.id_cliente as id_persona 
+,sc.tel_1 as telefono_sms 
+,sc.cant_clicks as cantidad_clicks_sms 
+,FROM_UNIXTIME(UNIX_TIMESTAMP(substr(sc.fecha_ult_click,1,9), 'dd/M/yyyy'), 'yyyyMMdd') as fecha_ultimo_click  
+,sc.entidad 
+,sb.n_producto as codigo_rubro_producto  
+from de_qua_1raw.sms_clicks sc 
+inner join de_qua_1raw.sms_base sb 
+on sc.tel_1 = sb.tel_1

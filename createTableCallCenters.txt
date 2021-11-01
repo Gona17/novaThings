@@ -1,0 +1,138 @@
+CREATE EXTERNAL TABLE de_qua_1raw.cc_base_contacto(
+      ContactoID string,
+	GrupoAgenteID string, 
+	ClienteAgenteID string, 
+	NombreCompleto string, 
+	FechaNacimiento string, 
+	Edad string, 
+	CUIT string, 
+	ClienteQualia string,
+	Empleado string, 
+	PoseePlanRetencion string ,
+	BajaPorMora string,
+	ListaNegraQualia string,
+	Vida string ,
+	Salud string ,
+	BP string ,
+	Hogar string ,
+	Bicicletas string ,
+	APSenior string ,
+	RiesgosVarios string ,
+	IntegralComercio string ,
+	Incendio string ,
+	SepelioIndividual string ,
+	BP_Coaseguro string ,
+	Hogar_Coaseguro string ,
+	Vida_Reaseguro string ,
+	APSenior_Reaseguro string ,
+	Contactable string ,
+	FechaActualizacionTelefonos string ,
+	TarjetaCreditoVisa string ,
+	TarjetaCreditoMastercard string ,
+	CajaDeAhorro string ,
+	HaberesPromedio string ,
+	CODPOSTAL string ,
+	CIUDAD string ,
+	CALLE string ,
+	Altura string ,
+	Piso string ,
+	Departamento string ,
+	PROVINCIA string ,
+	SEXO string ,
+	Telefono1 string ,
+	Telefono2 string ,
+	Telefono3 string ,
+	Telefono4 string ,
+	Telefono5 string ,
+	EMAIL string ,
+	Score_Productos_Bancarios string ,
+	Score_Vida_Salud string ,
+	Score_Robo string ,
+	Score_Hogar string ,
+	Score_APSenior string ,
+	Score_Vida_Salud_Ponderado string ,
+	Score_Robo_Ponderado string ,
+	Score_Hogar_Ponderado string ,
+	Score_APSenior_Ponderado string 
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_base_contacto';
+
+
+
+
+CREATE EXTERNAL TABLE de_qua_1raw.cc_devolucion(
+      Id_Campaña string,
+	FechaID string, 
+	GrupoAgenteID string, 
+	Id_TipoCampaña string, 
+	CallcenterID string, 
+	ContactoID string, 
+	ResultadoID string, 
+	TelefonoContactado string 
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_devolucion'
+
+
+CREATE EXTERNAL TABLE de_qua_1raw.cc_resultado(
+      ID_Resultado string,
+	Descripcion_resultado string, 
+	RefiereContacto string, 
+	RefiereVenta string, 
+	Estado string, 
+	GrupoResultadoID string
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_resultado'
+
+
+
+CREATE EXTERNAL TABLE de_qua_1raw.cc_campania(
+      CampañaID string,
+	Campaña string, 
+	FechaInicio string, 
+	FechaFin string, 
+	CantidadContactos string, 
+	GrupoResultadoID string
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_campania'
+
+
+CREATE EXTERNAL TABLE de_qua_1raw.cc_requerimiento(
+      RequerimientoID string,
+	CampañaID string, 
+	FechaID string, 
+	GrupoAgenteID string, 
+	TipoCampañaID string, 
+	CallcenterID string,
+	CombinacionProductosID string,
+	CantidadContactos string
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_requerimiento'
+
+
+
+CREATE EXTERNAL TABLE de_qua_1raw.cc_combinacionproducto(
+     CombinacionProductosID string,
+	CombinacionProductos string
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_combinacionproducto'
+	
+	
+CREATE EXTERNAL TABLE de_qua_1raw.cc_GrupoResultado(
+     GrupoResultadoID string,
+	Descripcion string
+	)
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/01-raw/cc_GrupoResultado'

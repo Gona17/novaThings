@@ -1,0 +1,502 @@
+---Prisma Movimientos
+
+	---BER/BSC/BSJ:
+
+with cierres as (
+    select distinct 
+        id_persona
+        , cast(CONCAT(TRIM(cuenta)
+        , TRIM(digito)) as bigint) as cuenta 
+    from de_ber_1raw.cierre_mensual_visa_mc
+    where id_persona is not null and id_persona not in ('0', '-99')
+) 
+    select DISTINCT
+        NULL as id_persona
+        , rc.Id_Cliente_Core
+        , CAST(pm.bcodest AS INT) as id_banco_sucursal_movimiento
+        , CAST(pm.casadest AS INT) as id_casa_emisor
+        , CAST(pm.cartera AS INT) as id_cartera
+        , CAST(pm.usuario AS INT) as id_ult_usuario
+        , pm.fevento as fecha_movimiento
+        , pm.fpres as fecha_presentaccion_movimiento
+        , pm.fpago AS fecha_pago_movimiento
+        , pm.moneda AS id_moneda_transaccion
+        , CAST(pm.codop AS BIGINT) AS Id_codigo_conciliacion
+        , CAST(pm.evento AS INT) AS Id_Transaccion
+        , CAST(pm.evento_grupo AS INT) AS Id_Grupo_Liq
+        , CAST(pm.evento_origen AS INT) AS id_grupo_evento_orig
+        , CAST(pm.orden AS INT) AS id_orden_visa
+        , pm.signo_evento AS credito_debito
+        , pm.libre AS libre_visa
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_no_facturado
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_2,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_2,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_cruce_fondos
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_3,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_3,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_reservado_visa_3
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_4,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_4,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_reservado_visa_4
+        , pm.libre1 AS libre_visa_1
+        , pm.marca_rlimpio AS marca_resumen_limpio
+        , CAST(pm.bcodesd_ei AS INT) AS id_banco_emisor_ei
+        , CAST(pm.casadest_ei AS INT) AS id_casa_emisor_ei
+        , CAST(pm.cartera_ei AS INT) AS id_cartera_ei
+        , pm.fcierre AS Fecha_Cierre_Usuarios
+        , CAST(pm.plancuot AS INT) AS Q_Cuotas_Plan
+        , CAST(pm.nro_cuot AS INT) AS nro_cuota
+        , pm.producto_conc AS producto_reservado_visa
+        , pm.producto AS Id_Producto_Cta
+        , CAST(pm.codop_orig AS INT) AS id_conciliacion_orig
+        , pm.forig AS Fecha_Origen_Movimiento
+        , pm.fpres_orig AS Fecha_origen_Presentacion_Movimiento
+        , pm.fpago_orig AS fecha_origen_pago_movimiento
+        , pm.numcomp AS Nro_Cupon
+        , pm.codaut AS Nro_Autorizacion_Movimiento
+        , pm.db_automat AS Id_Debito_Automatico
+        , pm.term_cartura AS id_terminal_captura
+        , pm.atm AS atm
+        , pm.numest AS Id_Comercio
+        , CAST(pm.numcom AS BIGINT) AS id_cuenta_comerciante
+        , pm.bco_pagador AS id_bco_pagador
+        , CAST(pm.bcoest AS INT) AS id_bco_establecimiento
+        , CAST(pm.casaest AS INT) AS id_casa_establecimiento
+        , CAST(pm.rubro AS INT) AS Id_Rubro_Movimiento
+        , pm.codgeo_est AS Id_Zona_Geo_Origen
+        , pm.nomcdad AS nombre_cuidad_ext
+        , pm.denest AS desc_mov
+        , pm.libre2 AS libre_visa_2
+        , pm.codpais AS id_pais
+        , pm.monorig AS Id_Moneda_Original
+        , case when imporig = '0000000000000' then cast(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) as decimal(13,2)) else cast(concat(substr(pm.imporig, 1, 11),'.',substr(pm.imporig, -2)) as decimal(13,2)) end AS Mto_Orig
+        , pm.cinta AS nro_cinta_cie
+        , pm.tarjeta AS Nro_Tarjeta
+        , pm.libre3 AS libre_visa_3
+        , pm.cod_registro AS id_registro
+        , pm.id_archivo AS fuente_registro 
+            from de_ber_1raw.pris_movimientos pm 
+      inner join cierres on CAST(pm.usuario AS BIGINT) = cierres.cuenta 
+      inner join de_ber_2cur.rel_cliente_core_documentos rc 
+            on cierres.id_persona = rc.id_persona
+
+
+
+	----BSF:
+
+
+with cierres as 
+(
+    select distinct 
+        nit
+        , cast(CONCAT(TRIM(cuenta)
+        , TRIM(digito)) as bigint) as cuenta 
+    from test.cierre_mensual_visa_mc_bsf 
+    where length(nit) > 0 and nit != '0'
+)
+, clientes as (
+    select distinct 
+        id_cliente_core 
+    from de_bsf_2cur.cliente_homologado_ext
+) 
+    select DISTINCT 
+        NULL as id_persona
+        , rc.Id_Cliente_Core
+        , CAST(pm.bcodest AS INT) as id_banco_sucursal_movimiento
+        , CAST(pm.casadest AS INT) as id_casa_emisor
+        , CAST(pm.cartera AS INT) as id_cartera
+        , CAST(pm.usuario AS INT) as id_ult_usuario
+        , pm.fevento as fecha_movimiento
+        , pm.fpres as fecha_presentaccion_movimiento
+        , pm.fpago AS fecha_pago_movimiento
+        , pm.moneda AS id_moneda_transaccion
+        , CAST(pm.codop AS BIGINT) AS Id_codigo_conciliacion
+        , CAST(pm.evento AS INT) AS Id_Transaccion
+        , CAST(pm.evento_grupo AS INT) AS Id_Grupo_Liq
+        , CAST(pm.evento_origen AS INT) AS id_grupo_evento_orig
+        , CAST(pm.orden AS INT) AS id_orden_visa
+        , pm.signo_evento AS credito_debito
+        , pm.libre AS libre_visa
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_no_facturado
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_2,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_2,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_cruce_fondos
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_3,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_3,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_reservado_visa_3
+        , CAST(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_4,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_4,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) AS DECIMAL(10,2)) AS mto_reservado_visa_4
+        , pm.libre1 AS libre_visa_1
+        , pm.marca_rlimpio AS marca_resumen_limpio
+        , CAST(pm.bcodesd_ei AS INT) AS id_banco_emisor_ei
+        , CAST(pm.casadest_ei AS INT) AS id_casa_emisor_ei
+        , CAST(pm.cartera_ei AS INT) AS id_cartera_ei
+        , pm.fcierre AS Fecha_Cierre_Usuarios
+        , CAST(pm.plancuot AS INT) AS Q_Cuotas_Plan
+        , CAST(pm.nro_cuot AS INT) AS nro_cuota
+        , pm.producto_conc AS producto_reservado_visa
+        , pm.producto AS Id_Producto_Cta
+        , CAST(pm.codop_orig AS INT) AS id_conciliacion_orig
+        , pm.forig AS Fecha_Origen_Movimiento
+        , pm.fpres_orig AS Fecha_origen_Presentacion_Movimiento
+        , pm.fpago_orig AS fecha_origen_pago_movimiento
+        , pm.numcomp AS Nro_Cupon
+        , pm.codaut AS Nro_Autorizacion_Movimiento
+        , pm.db_automat AS Id_Debito_Automatico
+        , pm.term_cartura AS id_terminal_captura
+        , pm.atm AS atm
+        , pm.numest AS Id_Comercio
+        , CAST(pm.numcom AS BIGINT) AS id_cuenta_comerciante
+        , pm.bco_pagador AS id_bco_pagador
+        , CAST(pm.bcoest AS INT) AS id_bco_establecimiento
+        , CAST(pm.casaest AS INT) AS id_casa_establecimiento
+        , CAST(pm.rubro AS INT) AS Id_Rubro_Movimiento
+        , pm.codgeo_est AS Id_Zona_Geo_Origen
+        , pm.nomcdad AS nombre_cuidad_ext
+        , pm.denest AS desc_mov
+        , pm.libre2 AS libre_visa_2
+        , pm.codpais AS id_pais
+        , pm.monorig AS Id_Moneda_Original
+        , case when imporig = '0000000000000' then cast(concat(substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),1, 8), '.', substr(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(pm.importe_1,'{','0'),'}','0'),'A','1'),'B','2'),'C','3'),'D','4'),'E','5'),'F','6'),'G','7'),'H','8'),'I','9'),'J','1'),'K','2'),'L','3'),'M','4'),'N','5'),'O','6'),'P','7'),'Q','8'),'R','9'),-2)) as decimal(13,2)) else cast(concat(substr(pm.imporig, 1, 11),'.',substr(pm.imporig, -2)) as decimal(13,2)) end AS Mto_Orig
+        , pm.cinta AS nro_cinta_cie
+        , pm.tarjeta AS Nro_Tarjeta
+        , pm.libre3 AS libre_visa_3
+        , pm.cod_registro AS id_registro
+        , pm.id_archivo AS fuente_registro 
+            from de_bsf_1raw.pris_movimientos pm 
+      inner join cierres
+            on CAST(pm.usuario AS BIGINT) = cierres.cuenta 
+      inner join clientes rc 
+            on cierres.nit = rc.id_cliente_core
+
+
+
+
+--Credencial Movimientos
+
+	--BER/BSC/BSJ:
+
+with cierres as (
+    select distinct 
+        id_persona
+        ,cast(CONCAT(TRIM(cuenta)
+        ,TRIM(digito)) as bigint) as cuenta 
+    from de_ber_1raw.cierre_mensual_visa_mc 
+    where id_persona is not null and id_persona not in ('0', '-99')
+) 
+    SELECT DISTINCT 
+        NULL as id_persona
+        , CAST(rc.Id_Cliente_Core AS BIGINT) as id_cliente_core
+        , CAST(cm.nro_lote AS STRING) as nro_lote
+        , CAST(cm.nro_boleta AS BIGINT) as nro_boleta
+        , CAST(cm.cod_transac AS INT) as id_transaccion
+        , CAST(cm.nro_bco_suc_mov AS INT) as id_banco_sucursal_mov
+        , CAST(cm.reservado_uso_casa1 AS INT) as filler_credencial_1
+        , CAST(cm.nro_cupon AS INT) as nro_cupon
+        , CAST(cm.cod_mon AS INT) as id_moneda
+        , CAST(concat(substr(cm.imp_cotiz,1,5),'.',substr(cm.imp_cotiz,-4)) AS DECIMAL(9,4)) as valor_cotiz_conversion
+        , CAST(concat(substr(concat(substr(cm.imp_tot_vta, 1, 12), CASE substr(cm.imp_tot_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_vta, -1)END),1,11),'.',substr(concat(substr(cm.imp_tot_vta, 1, 12), CASE substr(cm.imp_tot_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_vta, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_en_cuotas
+        , CAST(concat(substr(concat(substr(cm.imp_tot_orig, 1, 12),CASE substr(cm.imp_tot_orig, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_orig, -1)END),1,11),'.',substr(concat(substr(cm.imp_tot_orig, 1, 12), CASE substr(cm.imp_tot_orig, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_orig, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total
+        , CAST(concat(substr(concat(substr(cm.imp_sdes, 1, 12),CASE substr(cm.imp_sdes, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_sdes, -1)END),1,11),'.',substr(concat(substr(cm.imp_sdes, 1, 12),CASE substr(cm.imp_sdes, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_sdes, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_sin_descuento
+        , CAST(concat(substr(concat(substr(cm.imp_tot, 1, 12), CASE substr(cm.imp_tot, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot, -1)END), 1, 11),'.',substr(concat(substr(cm.imp_tot, 1, 12), CASE substr(cm.imp_tot, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_2
+        , cm.forigen as fecha_origen_mov
+        , cm.fepres as fecha_presentaccion_mov
+        , cm.feproc as fecha_proceso_mov
+        , cm.fclear as fecha_clearing_mov
+        , cm.fliqcom as fecha_liq_mov_comercios
+        , cm.fliqusu as fecha_liq_socios
+        , cm.fpago as fecha_pago_mov
+        , cm.fvenc as fecha_vto_mov
+        , CAST(cm.nro_com AS STRING) as id_comercio
+        , CAST(cm.plazo AS INT) as plazo_pago
+        , CAST(concat(substr(cm.por_descto,1,2),'.',substr(cm.por_descto,-2)) AS DECIMAL(4,2)) as porc_retencion_comercio
+        , CAST(cm.cod_rubro AS INT) as id_rubro_mov, CAST(concat( substr( concat(substr(por_alicuota_iva_com, 1, 4)
+        , CASE substr(por_alicuota_iva_com, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(por_alicuota_iva_com, -1) END),1,3),'.',substr(concat(substr(por_alicuota_iva_com, 1, 4), CASE substr(por_alicuota_iva_com, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(por_alicuota_iva_com, -1) END ),-2) ) AS DECIMAL(5, 2) ) as porc_iva
+        , CAST(cm.cod_producto_com AS INT) as id_producto_vta_comercio, CAST(concat(substr( concat( substr(cm.imp_fijo_asoc_vta, 1, 12), CASE substr(cm.imp_fijo_asoc_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_fijo_asoc_vta, -1) END),1,11),'.',substr(concat(substr(cm.imp_fijo_asoc_vta, 1, 12), CASE substr(cm.imp_fijo_asoc_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_fijo_asoc_vta, -1) END),-2)) AS DECIMAL(13, 2)) as mto_prestamo
+        , CAST(cm.nro_bco_suc_ruc AS STRING) as id_banco_sucursal_cliente
+        , CAST(cm.nro_ruc AS STRING) as nro_cuenta
+        , CAST(cm.nro_tar AS STRING) as nro_tarjeta
+        , CAST(cm.grupo AS INT) as id_grupo_liq
+        , CAST(concat(substr(cm.imp_iva_usu,1,11),'.',substr(cm.imp_iva_usu,-2)) AS DECIMAL(13,2)) as mto_retencion_iva
+        , CAST(cm.cod_producto_cta AS STRING) as id_producto_cta
+        , CAST(cm.nro_aut AS BIGINT) as nro_autorizacion_mov
+        , cm.mon_orig as id_moneda_original
+        , cm.fpago_mc as fecha_pago_credencial
+        , CAST(cm.cod_tasint_mc AS INT) as id_tasa_int_credencial
+        , CAST(cm.cod_financ AS INT) as id_financiacion
+        , CAST(cm.filler AS STRING) as filler_credencial_2
+        , CAST(cm.cod_zogeo_orig AS STRING) as id_zona_geo_origen
+        , CAST(cm.cod_zogeo_dest AS STRING) as id_zona_geo_destino
+        , CAST(cm.cod_debaut AS INT) as id_debito_automatico
+        , CAST(cm.tip_vta AS STRING) as tipo_venta
+        , CAST(cm.mont_contrap AS INT) as id_mot_contrapartida
+        , cm.forigen_posnet as fecha_origen_mov_posnet
+        , CAST(cm.cuota AS INT) as nro_cuota
+        , CAST(cm.mar_financiable AS STRING) as marca_mov_financiero
+        , CAST(cm.mar_exc_lim_cpra AS STRING) as marca_mov_lim_compra
+        , CAST(cm.mar_ret_iva AS STRING) as marca_retencion_iva
+        , CAST(cm.mar_cuo_anti AS STRING) asmarca_mov_cuota_ant
+        , CAST(concat(substr(cm.por_tas_int_pag_ade,1,3),'.',substr(cm.por_tas_int_pag_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_int_pagadora
+        , CAST(concat(substr(cm.imp_int_pag_ade,1,11),'.',substr(cm.imp_int_pag_ade,-2)) AS DECIMAL(13,2)) as mto_interes_adelantado
+        , CAST(concat(substr(cm.por_tas_int_emi_ade,1,3),'.',substr(cm.por_tas_int_emi_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_int_adelantado
+        , CAST(concat(substr(cm.por_ara_ade,1,3),'.',substr(cm.por_ara_ade,-3)) AS DECIMAL(6,3)) as mto_adelanto
+        , CAST(concat(substr(cm.por_tas_sel_ade,1,3),'.',substr(cm.por_tas_sel_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_sellado_adelanto
+        , CAST(cm.den_mov AS STRING) as desc_mov
+        , CAST(cm.den_mov_adi AS STRING) as desc_adicional_mov
+        , CAST(cm.est_proc AS STRING) as id_estado_proceso
+        , CAST(cm.reservado_uso_casa3 AS STRING) as filler_credencial_3
+        , CAST(cm.can_cuotas_plan AS INT) as q_cuotas_plan
+        , CAST(cm.reservado_uso_casa4 AS STRING) as filler_credencial_4
+        , CAST(concat(substr(cm.tasa_intercam,1,11),'.',substr(cm.tasa_intercam,-2)) AS DECIMAL(13,2)) mto_tasa_intercambio
+        , CAST(cm.ref_univ_de31 AS STRING) as id_referencia_mc
+        , CAST(cm.com_mc AS STRING) as id_comercio_mc
+        , CAST(cm.de22 AS STRING) as id_modo_ingreso_mc
+        , CAST(cm.filler1 AS STRING) as filler_3
+        , CAST(cm.tip_reg AS STRING) as fuente_registro 
+            from de_ber_1raw.cred_movimientos cm 
+      inner join cierres 
+            on CAST(cm.nro_ruc AS BIGINT) = cierres.cuenta 
+      inner join de_ber_2cur.rel_cliente_core_documentos rc 
+            on cierres.id_persona = rc.id_persona
+
+
+	---BSF:
+
+with cierres as 
+(
+    select distinct 
+        nit
+        ,cast(CONCAT(TRIM(cuenta)
+        ,TRIM(digito)) as bigint) as cuenta 
+    from test.cierre_mensual_visa_mc_bsf
+    where length(nit) > 0 and nit != '0'
+)
+, clientes as 
+(
+    select distinct 
+        id_cliente_core 
+    from de_bsf_2cur.cliente_homologado_ext
+) 
+    SELECT DISTINCT 
+        NULL as id_persona
+        , CAST(rc.Id_Cliente_Core AS BIGINT) as id_cliente_core
+        , CAST(cm.nro_lote AS STRING) as nro_lote
+        , CAST(cm.nro_boleta AS BIGINT) as nro_boleta
+        , CAST(cm.cod_transac AS INT) as id_transaccion
+        , CAST(cm.nro_bco_suc_mov AS INT) as id_banco_sucursal_mov
+        , CAST(cm.reservado_uso_casa1 AS INT) as filler_credencial_1
+        , CAST(cm.nro_cupon AS INT) as nro_cupon
+        , CAST(cm.cod_mon AS INT) as id_moneda
+        , CAST(concat(substr(cm.imp_cotiz,1,5),'.',substr(cm.imp_cotiz,-4)) AS DECIMAL(9,4)) as valor_cotiz_conversion
+        , CAST(concat(substr(concat(substr(cm.imp_tot_vta, 1, 12), CASE substr(cm.imp_tot_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_vta, -1)END),1,11),'.',substr(concat(substr(cm.imp_tot_vta, 1, 12), CASE substr(cm.imp_tot_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_vta, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_en_cuotas
+        , CAST(concat(substr(concat(substr(cm.imp_tot_orig, 1, 12),CASE substr(cm.imp_tot_orig, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_orig, -1)END),1,11),'.',substr(concat(substr(cm.imp_tot_orig, 1, 12), CASE substr(cm.imp_tot_orig, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot_orig, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total
+        , CAST(concat(substr(concat(substr(cm.imp_sdes, 1, 12),CASE substr(cm.imp_sdes, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_sdes, -1)END),1,11),'.',substr(concat(substr(cm.imp_sdes, 1, 12),CASE substr(cm.imp_sdes, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_sdes, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_sin_descuento
+        , CAST(concat(substr(concat(substr(cm.imp_tot, 1, 12), CASE substr(cm.imp_tot, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot, -1)END), 1, 11),'.',substr(concat(substr(cm.imp_tot, 1, 12), CASE substr(cm.imp_tot, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_tot, -1)END),-2)) AS DECIMAL(13, 2)) as mto_total_2
+        , cm.forigen as fecha_origen_mov
+        , cm.fepres as fecha_presentaccion_mov
+        , cm.feproc as fecha_proceso_mov
+        , cm.fclear as fecha_clearing_mov
+        , cm.fliqcom as fecha_liq_mov_comercios
+        , cm.fliqusu as fecha_liq_socios
+        , cm.fpago as fecha_pago_mov
+        , cm.fvenc as fecha_vto_mov
+        , CAST(cm.nro_com AS STRING) as id_comercio
+        , CAST(cm.plazo AS INT) as plazo_pago
+        , CAST(concat(substr(cm.por_descto,1,2),'.',substr(cm.por_descto,-2)) AS DECIMAL(4,2)) as porc_retencion_comercio
+        , CAST(cm.cod_rubro AS INT) as id_rubro_mov, CAST(concat( substr( concat(substr(por_alicuota_iva_com, 1, 4)
+        , CASE substr(por_alicuota_iva_com, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(por_alicuota_iva_com, -1) END),1,3),'.',substr(concat(substr(por_alicuota_iva_com, 1, 4), CASE substr(por_alicuota_iva_com, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(por_alicuota_iva_com, -1) END ),-2) ) AS DECIMAL(5, 2) ) as porc_iva
+        , CAST(cm.cod_producto_com AS INT) as id_producto_vta_comercio, CAST(concat(substr( concat( substr(cm.imp_fijo_asoc_vta, 1, 12), CASE substr(cm.imp_fijo_asoc_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_fijo_asoc_vta, -1) END),1,11),'.',substr(concat(substr(cm.imp_fijo_asoc_vta, 1, 12), CASE substr(cm.imp_fijo_asoc_vta, -1) WHEN 'p' THEN '0' WHEN 'q' THEN '1' WHEN 'r' THEN '2' WHEN 's' THEN '3' WHEN 't' THEN '4' WHEN 'u' THEN '5' WHEN 'v' THEN '6' WHEN 'w' THEN '7' WHEN 'x' THEN '8' WHEN 'y' THEN '9' ELSE substr(cm.imp_fijo_asoc_vta, -1) END),-2)) AS DECIMAL(13, 2)) as mto_prestamo
+        , CAST(cm.nro_bco_suc_ruc AS STRING) as id_banco_sucursal_cliente
+        , CAST(cm.nro_ruc AS STRING) as nro_cuenta
+        , CAST(cm.nro_tar AS STRING) as nro_tarjeta
+        , CAST(cm.grupo AS INT) as id_grupo_liq
+        , CAST(concat(substr(cm.imp_iva_usu,1,11),'.',substr(cm.imp_iva_usu,-2)) AS DECIMAL(13,2)) as mto_retencion_iva
+        , CAST(cm.cod_producto_cta AS STRING) as id_producto_cta
+        , CAST(cm.nro_aut AS BIGINT) as nro_autorizacion_mov
+        , cm.mon_orig as id_moneda_original
+        , cm.fpago_mc as fecha_pago_credencial
+        , CAST(cm.cod_tasint_mc AS INT) as id_tasa_int_credencial
+        , CAST(cm.cod_financ AS INT) as id_financiacion
+        , CAST(cm.filler AS STRING) as filler_credencial_2
+        , CAST(cm.cod_zogeo_orig AS STRING) as id_zona_geo_origen
+        , CAST(cm.cod_zogeo_dest AS STRING) as id_zona_geo_destino
+        , CAST(cm.cod_debaut AS INT) as id_debito_automatico
+        , CAST(cm.tip_vta AS STRING) as tipo_venta
+        , CAST(cm.mont_contrap AS INT) as id_mot_contrapartida
+        , cm.forigen_posnet as fecha_origen_mov_posnet
+        , CAST(cm.cuota AS INT) as nro_cuota
+        , CAST(cm.mar_financiable AS STRING) as marca_mov_financiero
+        , CAST(cm.mar_exc_lim_cpra AS STRING) as marca_mov_lim_compra
+        , CAST(cm.mar_ret_iva AS STRING) as marca_retencion_iva
+        , CAST(cm.mar_cuo_anti AS STRING) asmarca_mov_cuota_ant
+        , CAST(concat(substr(cm.por_tas_int_pag_ade,1,3),'.',substr(cm.por_tas_int_pag_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_int_pagadora
+        , CAST(concat(substr(cm.imp_int_pag_ade,1,11),'.',substr(cm.imp_int_pag_ade,-2)) AS DECIMAL(13,2)) as mto_interes_adelantado
+        , CAST(concat(substr(cm.por_tas_int_emi_ade,1,3),'.',substr(cm.por_tas_int_emi_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_int_adelantado
+        , CAST(concat(substr(cm.por_ara_ade,1,3),'.',substr(cm.por_ara_ade,-3)) AS DECIMAL(6,3)) as mto_adelanto
+        , CAST(concat(substr(cm.por_tas_sel_ade,1,3),'.',substr(cm.por_tas_sel_ade,-3)) AS DECIMAL(6,3)) as porc_tasa_sellado_adelanto
+        , CAST(cm.den_mov AS STRING) as desc_mov
+        , CAST(cm.den_mov_adi AS STRING) as desc_adicional_mov
+        , CAST(cm.est_proc AS STRING) as id_estado_proceso
+        , CAST(cm.reservado_uso_casa3 AS STRING) as filler_credencial_3
+        , CAST(cm.can_cuotas_plan AS INT) as q_cuotas_plan
+        , CAST(cm.reservado_uso_casa4 AS STRING) as filler_credencial_4
+        , CAST(concat(substr(cm.tasa_intercam,1,11),'.',substr(cm.tasa_intercam,-2)) AS DECIMAL(13,2)) mto_tasa_intercambio
+        , CAST(cm.ref_univ_de31 AS STRING) as id_referencia_mc
+        , CAST(cm.com_mc AS STRING) as id_comercio_mc
+        , CAST(cm.de22 AS STRING) as id_modo_ingreso_mc
+        , CAST(cm.filler1 AS STRING) as filler_3
+        , CAST(cm.tip_reg AS STRING) as fuente_registro
+            from de_bsf_1raw.cred_movimientos cm 
+      inner join cierres 
+            on CAST(cm.nro_ruc AS BIGINT) = cierres.cuenta 
+      inner join clientes rc 
+            on cierres.nit = rc.id_cliente_core
+
+
+
+---Consumos
+
+	---BER/BSC/BSJ:
+
+WITH clientes AS 
+(
+    SELECT DISTINCT 
+        id_cliente_core 
+    FROM de_ber_2cur.rel_cliente_core_documentos
+)
+, rank_table_cred AS 
+(
+    SELECT DISTINCT 
+        mto_total mt
+        , ROUND(PERCENT_RANK() OVER (ORDER BY ROUND(NVL(mto_total,0),1)) * 100,0) AS rank 
+    FROM de_ber_2cur.ft_ttcc_movimientos_credencial 
+    WHERE nro_cuota < 2 AND NVL(id_rubro_mov,0) != 0
+)
+, rank_table_pris AS 
+(
+    SELECT DISTINCT 
+        mto_orig mt
+        , ROUND(PERCENT_RANK() OVER (ORDER BY ROUND(NVL(mto_orig,0),1)) * 100,0) AS rank 
+    FROM de_ber_2cur.ft_ttcc_movimientos_prisma 
+    WHERE nro_cuota < 2 AND NVL(id_rubro_movimiento,0) != 0
+) 
+    SELECT 
+        rc.Id_Cliente_Core
+        , ft.Id_Transaccion
+        , ft.fecha_origen_mov AS fecha_transaccion
+        , ft.mto_total AS mto_transaccion
+        , CAST(ft.id_moneda AS STRING)
+        , 'MC' AS id_tarjetera
+        , ft.id_rubro_mov AS id_rubro
+        , CAST(pb.id_param AS INT) AS id_categoria  
+          FROM clientes rc  
+    INNER JOIN de_ber_2cur.ft_ttcc_movimientos_credencial ft 
+          ON rc.id_cliente_core = CAST(ft.id_cliente_core AS BIGINT)  
+    INNER JOIN de_gpn_1raw.param_bco_tarjetas_rubro_relacion pb 
+          ON ft.id_rubro_mov = CAST(pb.codigo_origen AS INT)  
+          WHERE ft.nro_cuota < 2 AND NVL(ft.id_rubro_mov,0) != 0  AND ft.mto_total 
+            BETWEEN (
+                SELECT MAX(a.mt) 
+                FROM rank_table_cred a 
+                WHERE a.rank = 10
+            ) 
+            AND (
+                SELECT MIN(a.mt) FROM rank_table_cred a WHERE a.rank = 90
+            ) 
+UNION ALL  
+    SELECT 
+        rc.Id_Cliente_Core
+        , ft.Id_Transaccion
+        , ft.fecha_origen_movimiento
+        , ft.mto_orig
+        , ft.id_moneda_transaccion
+        , 'VI' AS id_tarjetera
+        , ft.id_rubro_movimiento
+        , CAST(pb.id_param AS INT) 
+            FROM clientes rc 
+      INNER JOIN de_ber_2cur.ft_ttcc_movimientos_prisma ft 
+            ON rc.id_cliente_core = CAST(ft.id_cliente_core AS BIGINT) 
+      INNER JOIN de_gpn_1raw.param_bco_tarjetas_rubro_relacion pb 
+            ON ft.id_rubro_movimiento = CAST(pb.codigo_origen AS INT) 
+            WHERE ft.nro_cuota < 2 AND NVL(ft.id_rubro_movimiento,0) != 0 AND ft.mto_orig 
+                BETWEEN (
+                    SELECT MAX(a.mt) 
+                    FROM rank_table_pris a 
+                    WHERE a.rank = 10
+                ) 
+                AND (
+                    SELECT MIN(a.mt) FROM rank_table_pris a WHERE a.rank = 90
+                )
+
+
+	---BSF:
+
+
+WITH clientes AS 
+(
+    SELECT DISTINCT 
+        id_cliente_core 
+    FROM de_bsf_2cur.cliente_homologado_ext
+)
+,rank_table_cred AS 
+(
+    SELECT DISTINCT 
+        mto_total mt
+        , ROUND(PERCENT_RANK() OVER (ORDER BY ROUND(NVL(mto_total,0),1)) * 100,0) AS rank 
+    FROM de_bsf_2cur.ft_ttcc_movimientos_credencial 
+    WHERE nro_cuota < 2 AND NVL(id_rubro_mov,0) != 0
+)
+, rank_table_pris AS 
+(
+    SELECT DISTINCT 
+        mto_orig mt
+        , ROUND(PERCENT_RANK() OVER (ORDER BY ROUND(NVL(mto_orig,0),1)) * 100,0) AS rank 
+    FROM de_bsf_2cur.ft_ttcc_movimientos_prisma 
+    WHERE nro_cuota < 2 AND NVL(id_rubro_movimiento,0) != 0
+) 
+    SELECT 
+        rc.Id_Cliente_Core
+        , ft.Id_Transaccion
+        , ft.fecha_origen_mov AS fecha_transaccion
+        , ft.mto_total AS mto_transaccion
+        , CAST(ft.id_moneda AS STRING)
+        , 'MC' AS id_tarjetera
+        , ft.id_rubro_mov AS id_rubro
+        , CAST(pb.id_param AS INT) AS id_categoria  
+          FROM clientes rc  
+    INNER JOIN de_bsf_2cur.ft_ttcc_movimientos_credencial ft 
+          ON rc.id_cliente_core = CAST(ft.id_cliente_core AS BIGINT)  
+    INNER JOIN de_gpn_1raw.param_bco_tarjetas_rubro_relacion pb 
+          ON ft.id_rubro_mov = CAST(pb.codigo_origen AS INT)  
+          WHERE ft.nro_cuota < 2 AND NVL(ft.id_rubro_mov,0) != 0  AND ft.mto_total 
+            BETWEEN (
+                SELECT MAX(a.mt) 
+                FROM rank_table_cred a 
+                WHERE a.rank = 10
+            ) 
+            AND (
+                SELECT MIN(a.mt) FROM rank_table_cred a WHERE a.rank = 90
+            ) 
+UNION ALL  
+    SELECT 
+        rc.Id_Cliente_Core
+        , ft.Id_Transaccion
+        , ft.fecha_origen_movimiento
+        , ft.mto_orig
+        , ft.id_moneda_transaccion
+        , 'VI' AS id_tarjetera
+        , ft.id_rubro_movimiento
+        , CAST(pb.id_param AS INT) 
+            FROM clientes rc 
+      INNER JOIN de_bsf_2cur.ft_ttcc_movimientos_prisma ft 
+            ON rc.id_cliente_core = CAST(ft.id_cliente_core AS BIGINT) 
+      INNER JOIN de_gpn_1raw.param_bco_tarjetas_rubro_relacion pb 
+            ON ft.id_rubro_movimiento = CAST(pb.codigo_origen AS INT) 
+            WHERE ft.nro_cuota < 2 AND NVL(ft.id_rubro_movimiento,0) != 0 AND ft.mto_orig 
+                BETWEEN (
+                    SELECT MAX(a.mt) 
+                    FROM rank_table_pris a 
+                    WHERE a.rank = 10
+                ) 
+                AND (
+                    SELECT MIN(a.mt) FROM rank_table_pris a WHERE a.rank = 90
+                )
+
+
+---Calculo gastos promedio ultimo mes :
+
+	SELECT id_cliente_core, 
+    		ROUND(AVG(mto_transaccion),2) gastos_promedio_ultimo_mes 
+    	FROM de_ber_3ref.ft_nbo_qualia_categorias_consumo 
+   	WHERE FROM_UNIXTIME(UNIX_TIMESTAMP(fecha_transaccion, 'yyyyMMdd'), 'yyyy-MM-dd') >= DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) 
+    	GROUP BY id_cliente_core
+

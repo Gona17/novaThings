@@ -1,0 +1,9 @@
+PROCESO DE AUDIENCIAS PARA HACER PIPELINE
+
+1. Se llena la clientes_categorias_producto
+2. Se generan las audiencias
+3. Se cortan
+4. Se insertan en la tabla de ft_audiencias_sms
+5. Ingestar resultados (en pipeline) dependiendo de como se va a automatizar la llegada
+6. Llenar tabla de ft_resultado_audiencias con las queries correspondientes
+7. Corre ABT

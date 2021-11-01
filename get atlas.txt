@@ -1,0 +1,11 @@
+ATLAS NUEVO:
+
+-jar;/nvkprocess/classes/pipelines_core/GetAtlasSchema-1.1.jar;${ENTORNO}
+
+java
+
+ATLAS VIEJO:
+
+/nvkprocess/classes/pipelines_core/GetAtlasSchema.py
+
+python

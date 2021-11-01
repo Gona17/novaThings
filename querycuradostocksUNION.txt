@@ -1,0 +1,63 @@
+SELECT DISTINCT cast(cs.id_cliente AS bigint) AS id_cliente_core,
+                cast(cs.cuit_l AS bigint) AS id_persona,
+                cast(trim(cs.n_cliente) AS string),
+                cast(trim(cs.a_cliente) AS string),
+                CAST(substr(trim(cs.cuit_l),3,8) AS BIGINT) AS nro_dni,
+                CAST(cs.num_pol AS bigint) AS nro_poliza,
+                trim(cs.cod_ramo) AS cod_ramo,
+                trim(cs.ramo),
+                trim(cs.cod_producto),
+                cs.producto,
+                CAST(cs.poliza_renov AS bigint) AS nro_poliza_renovada,
+                cs.vig_desde AS fecha_vig_desde,
+                cs.vig_hasta AS fecha_vig_hasta,
+                cs.fecha_alta,
+                cs.fecha_baja,
+                cs.fecha_emision_poliza,
+                cs.fecha_ult_mod AS fecha_ult_modificacion,
+                cs.forma_pago,
+                cs.mail AS mail,
+                cs.tipo_tel_1 AS tipo_telefono_1,
+                cs.tel1 AS telefono_1,
+                cs.tipo_tel_2 AS tipo_telefono_2,
+                cs.tel2 AS telefono_2,
+                cs.canal,
+                cs.entidad
+FROM de_qua_1raw.cliente_seguros cs
+WHERE (cs.entidad = 'bsf'
+       AND cs.fecha_proceso = ${fechabsf})
+  OR (cs.entidad = 'ber'
+      AND cs.fecha_proceso = ${fechaber})
+  OR (cs.entidad = 'bsj'
+      AND cs.fecha_proceso = ${fechabsj})
+  OR (cs.entidad = 'bsc'
+      AND cs.fecha_proceso = ${fechabsc})
+UNION
+SELECT DISTINCT cast(csd.id_cliente AS bigint) AS id_cliente_core,
+                cast(csd.cuit_l AS bigint) AS id_persona,
+                cast(trim(csd.n_cliente) AS string),
+                cast(trim(csd.a_cliente) AS string),
+                CAST(substr(trim(csd.cuit_l),3,8) AS BIGINT) AS nro_dni,
+                CAST(csd.num_pol AS bigint) AS nro_poliza,
+                trim(csd.cod_ramo),
+                trim(csd.ramo),
+                trim(csd.cod_producto),
+                csd.producto,
+                CAST('' AS BIGINT) AS nro_poliza_renovada,
+                csd.vig_desde AS fecha_vig_desde,
+                '' AS fecha_vig_hasta,
+                csd.fecha_alta,
+                csd.fecha_baja,
+                '' AS fecha_emision_poliza,
+                csd.fecha_ult_mod AS fecha_ult_modificacion,
+                csd.forma_pago,
+                csd.mail AS mail,
+                csd.tipo_tel_1 AS tipo_telefono_1,
+                csd.tel1 AS telefono_1,
+                csd.tipo_tel_2 AS tipo_telefono_2,
+                csd.tel2 AS telefono_2,
+                csd.canal,
+                csd.entidad
+FROM de_qua_1raw.cliente_seguros_dir csd
+WHERE (csd.entidad = 'dir'
+       AND csd.fecha_proceso = ${fechadir})

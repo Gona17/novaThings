@@ -1,0 +1,22 @@
+with main as(
+select distinct
+    ccp.id_cliente_core as id_cliente_core,
+    ccp.id_cliente_core_protegido as id_prospecto,
+    con.dato,
+    con.referencia_padre,
+    matriz.cat as categoria,
+    matriz.producto as producto
+    from de_bsf_3ref.rel_cliente_core_protegido ccp
+      join de_bsf_2cur.cont_calificacion_detalle_r con
+      on cast(con.id_cliente_original as bigint) = cast(ccp.id_cliente_core as bigint)
+    join de_qua_3ref.cliente_categoria_producto matriz
+      on matriz.id_prospecto = ccp.id_cliente_core_protegido
+    where con.referencia_padre in ('telefono')
+    and con.calificacion = 'conformado'
+    and con.tipo_contexto = 'celular'
+    and con.resultado_reglas not like '%Error%'
+)
+select tt. from main tt
+left join de_qua_3ref.ft_audiencia_sms ft
+on tt.id_prospecto = ft.id_prospecto
+where ft.id_prospecto is null or ft.fecha_proceso < SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)

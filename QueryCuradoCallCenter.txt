@@ -1,0 +1,54 @@
+with dev_resul as(
+select distinct
+    dd.contactoid as contactoid
+    , dd.id_campania as campaniaid
+    ,dd.grupoagenteid as grupoagenteid
+    , dd.telefonocontactado as telefonocontactado
+    , dd.resultadoid as resultadoid
+    ,cr.gruporesultadoid as gruporesultadoid 
+    ,rr.combinacionproductosid as combinacionproductosid
+    ,dd.fecha_proceso as fecha_proceso
+from de_qua_1raw.cc_devolucion dd
+left join de_qua_1raw.cc_resultado cr
+on dd.resultadoid = cr.id_resultado
+left join de_qua_1raw.cc_requerimiento rr
+on dd.id_campania = rr.campaniaid
+)
+insert into de_qua_2cur.dim_cc_resultado partition(fecha_proceso)
+select distinct 
+    bc.clienteagenteid
+    ,bc.cuit
+    ,bc.contactoid
+    ,bc.nombrecompleto
+    ,FROM_UNIXTIME(UNIX_TIMESTAMP(bc.fechanacimiento, 'yyyy-MM-dd'), 'yyyyMMdd') as fechanacimiento
+    ,bc.clientequalia
+    ,bc.empleado
+    ,bc.bajapormora
+    ,bc.codpostal
+    ,bc.provincia
+    ,bc.sexo
+    ,bc.telefono1
+    ,bc.telefono2
+    ,bc.telefono3
+    ,bc.telefono4
+    ,bc.telefono5
+    ,bc.email
+    ,dd.campaniaid
+    ,FROM_UNIXTIME(UNIX_TIMESTAMP(cc.fechainicio, 'dd/MM/yyyy'), 'yyyyMMdd') as fechainicio
+    ,dd.grupoagenteid
+    ,cp.combinacionproductosid
+    ,cp.combinacionproductos
+    ,dd.resultadoid
+    ,gr.gruporesultadoid
+    ,gr.descripcion
+    ,dd.telefonocontactado
+    ,dd.fecha_proceso
+from dev_resul dd
+left join cc_base_contacto bc
+on dd.contactoid = bc.contactoid
+left join cc_campania cc
+on dd.campaniaid = cc.campaniaid
+left join cc_gruporesultado gr
+on dd.gruporesultadoid = gr.gruporesultadoid
+left join cc_combinacionproducto cp
+on dd.combinacionproductosid = cp.combinacionproductosid;

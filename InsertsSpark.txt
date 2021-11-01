@@ -1,0 +1,73 @@
+import org.apache.spark.sql.functions.lit
+
+spark.sql("set hive.exec.dynamic.partition.mode=nonstrict")
+spark.sql("set spark.hadoop.hive.exec.dynamic.partition = true")
+df.withColumn("fecha_proceso", lit("20210810")).write.mode("overwrite").insertInto("de_bsf_2cur.ft_ttcc_movimientos_credencial")
+
+df.createOrReplaceTempView("tabla")
+
+
+
+
+
+
+PARA ARCHIVOS:
+
+
+%spark
+import org.apache.spark.sql.functions.lit
+import org.apache.spark.sql.SparkSession
+
+
+val spark = SparkSession
+    .builder
+    .appName("Simple Application")
+    .master("local[*]")
+    .getOrCreate()
+
+val path = "/user/admin/dev/qualia/00-landing/stocks_directos/fecha_proceso=20210915/stock_cc_20210915.txt.gz"
+val df = spark
+    .read
+    .option("delimiter","|")
+    .option("inferSchema","true")
+    .csv(path)
+
+spark.sql("set hive.exec.dynamic.partition.mode=nonstrict")
+spark.sql("set spark.hadoop.hive.exec.dynamic.partition = true")
+df.withColumn("fecha_proceso", lit("20210915")).withColumn("entidad", lit("dir")).write.mode("overwrite").insertInto("de_qua_1raw.cliente_seguros_dir")
+
+
+
+
+
+PARA HIVE DESDE PARTICIONES DE UNA TABLA:
+
+insert into table de_qua_2cur.dim_mov_cliente_consolidado partition(fecha_proceso)
+select distinct
+    cast(id_cliente as bigint) as id_cliente_core, 
+    cast(cuit_l as bigint) as id_persona,
+    n_cliente,
+    a_cliente,
+    CAST(substr(trim(cuit_l),3,8) AS BIGINT) as nro_dni,
+    CAST(num_pol AS bigint) AS nro_poliza,
+    cod_ramo,
+    ramo, 
+    cod_producto, 
+    producto, 
+    CAST(poliza_renov AS bigint) AS nro_poliza_renovada, 
+    vig_desde,
+    vig_hasta,
+    fecha_alta, 
+    fecha_baja, 
+    fecha_emision_poliza, 
+    fecha_ult_mod, 
+    forma_pago, 
+    mail as mail, 
+    tipo_tel_1 as tipo_tel_1,
+    tel_1 as tel_1,
+    tipo_tel_2 as tipo_tel_2,
+    tel_2 as tel_2,
+    entidad,
+    fecha_proceso
+from de_qua_1raw.cliente_seguros
+where entidad = "bsj";

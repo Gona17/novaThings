@@ -1,0 +1,5 @@
+Que info quiere el cliente?
+
+1.auntentif
+2.mostraar la info que quiero de google analitycs
+3.ver api que quiere el cliente

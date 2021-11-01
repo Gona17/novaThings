@@ -1,0 +1,11 @@
+20201113 esta es la fecha maxima de emision de poliza, que pasa?.
+
+fecha alta no sirve, miente.
+
+en los directos no hay fecha emision de poliza pero javi dice que si hay.
+
+´preguntar a javi que filtros usó para traer las ventas nuevas.
+
+VIENEN FECHA_EMISION_POLIZA VACIA CON 8 ESPACIOS.
+
+solucionar para los DIR, el saber si es RENOVACION o no.

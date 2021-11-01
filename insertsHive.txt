@@ -1,0 +1,96 @@
+----prospectos
+
+WITH fecha_max_bsf AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          MAX(fp.fecha_transaccion) fecha_max,
+          fp.fecha_proceso as fecha_proceso
+   FROM de_bsf_3ref.ft_nbo_qualia_categorias_consumo fp
+   WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria
+            ,fp.fecha_proceso),
+     cat_count_bsf AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          COUNT(1) as COUNT
+   FROM de_bsf_3ref.ft_nbo_qualia_categorias_consumo fp
+   WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria )
+     ,todo_bsf AS
+  (SELECT f.id_cliente_core,
+          f.id_categoria,
+          f.fecha_max,
+          c.count,
+          f.fecha_proceso as fecha_proceso
+   FROM fecha_max_bsf f
+   INNER JOIN cat_count_bsf c ON f.id_cliente_core = c.id_cliente_core
+   AND f.id_categoria = c.id_categoria)
+insert into de_qua_3ref.ft_prospectos partition (fecha_proceso)
+SELECT rc.id_cliente_core_protegido AS id_prospecto,
+       t.id_categoria AS categoria,
+       CAST(t.fecha_max AS VARCHAR(8)) AS fecha_max_consumo,
+       CAST(t.count AS INT) AS cantidad_consumos,
+        t.fecha_proceso as fecha_proceso
+FROM todo_bsf t
+INNER JOIN de_bsf_3ref.rel_cliente_core_protegido rc ON t.id_cliente_core = rc.id_cliente_core
+ORDER BY rc.id_cliente_core_protegido,
+         t.id_categoria;
+
+
+
+--- NBO
+
+	  WITH clientes AS
+  (SELECT DISTINCT CAST(Id_Cliente_Core AS BIGINT) AS id_cliente_core,
+                   nro_cuit AS id_persona
+   FROM de_bsf_2cur.cliente_homologado)
+insert into de_bsf_3ref.ft_nbo_qualia_categorias_consumo partition (fecha_proceso)
+SELECT rc.Id_Cliente_Core,
+       rc.id_persona,
+       ft.Id_Transaccion,
+       ft.fecha_origen_mov AS fecha_transaccion,
+       ft.mto_total AS mto_transaccion,
+       CAST(ft.id_moneda AS STRING) AS id_moneda,
+       'MC' AS id_tarjetera,
+       ft.id_rubro_mov AS id_rubro,
+       CAST(pb.id_param AS INT) AS id_categoria,
+       ft.fecha_proceso
+FROM clientes rc
+INNER JOIN de_bsf_2cur.ft_ttcc_movimientos_credencial ft ON CAST(rc.id_cliente_core AS BIGINT) = ft.id_cliente_core
+INNER JOIN de_ber_1raw.param_bco_codigo_relacion pb ON ft.id_rubro_mov = CAST(pb.codigo_origen AS INT)
+WHERE ft.nro_cuota < 2
+  AND NVL(ft.id_rubro_mov,0) != 0
+  AND pb.nombre_parametro = 'Agrupamiento Rubros de Consumo - NBO Qualia'
+UNION ALL
+SELECT rc.Id_Cliente_Core,
+       rc.id_persona,
+       ft.Id_Transaccion,
+       ft.fecha_origen_movimiento AS fecha_transaccion,
+       ft.mto_orig AS mto_transaccion,
+       ft.id_moneda_transaccion AS id_moneda,
+       'VI' AS id_tarjetera,
+       ft.id_rubro_movimiento AS id_rubro,
+       CAST(pb.id_param AS INT) AS id_categoria,
+       ft.fecha_proceso
+FROM clientes rc
+INNER JOIN de_bsf_2cur.ft_ttcc_movimientos_prisma ft ON rc.id_cliente_core = CAST(ft.id_cliente_core AS BIGINT)
+INNER JOIN de_ber_1raw.param_bco_codigo_relacion pb ON ft.id_rubro_movimiento = CAST(pb.codigo_origen AS INT)
+WHERE ft.nro_cuota < 2
+  AND NVL(ft.id_rubro_movimiento,0) != 0
+  AND pb.nombre_parametro = 'Agrupamiento Rubros de Consumo - NBO Qualia';
+         
+         
+
+
+---rel_cliente_core_protegido 
+
+insert into de_bsf_3ref.rel_cliente_core_protegido partition (fecha_proceso)
+SELECT DISTINCT fp.Id_Cliente_Core,
+                fp.id_persona,
+                sha(cast(fp.Id_Cliente_Core AS string)) AS id_cliente_core_protegido
+                ,fp.fecha_proceso
+FROM de_bsf_3ref.ft_nbo_qualia_categorias_consumo fp
+LEFT JOIN de_bsf_3ref.rel_cliente_core_protegido rc ON fp.Id_Cliente_Core = rc.Id_Cliente_Core
+WHERE rc.Id_Cliente_Core IS NULL

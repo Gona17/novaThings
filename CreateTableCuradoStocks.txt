@@ -1,0 +1,29 @@
+CREATE EXTERNAL TABLE de_qua_2cur.dim_mov_cliente_consolidado(
+	  id_cliente_core bigint COMMENT 'ID del cliente', 
+	  id_persona bigint COMMENT 'ID persona', 
+	  n_cliente STRING COMMENT 'Nombre del cliente', 
+	  a_cliente STRING COMMENT 'Apellido del cliente', 
+	  nro_dni bigint COMMENT 'Número de DNI del cliente', 
+	  nro_poliza bigint COMMENT 'Número de póliza emitida', 
+	  cod_ramo varchar(6) COMMENT 'Código de ramo', 
+	  ramo varchar(60) COMMENT 'Descripción del ramo', 
+	  cod_producto varchar(4) COMMENT 'Código del producto', 
+	  producto varchar(30) COMMENT 'Descripción del producto', 
+	  nro_poliza_renovada bigint COMMENT 'Número de la póliza renovada', 
+	  fecha_vig_desde varchar(8) COMMENT 'Fecha de inicio de vigencia', 
+	  fecha_vig_hasta varchar(8) COMMENT 'Fecha de final de vigencia', 
+	  fecha_alta varchar(8) COMMENT 'Fecha de alta', 
+	  fecha_baja varchar(8) COMMENT 'Fecha de bajo', 
+	  fecha_emision_poliza varchar(8) COMMENT 'Fecha en la que se emite la póliza', 
+	  fecha_ult_modificacion varchar(8) COMMENT 'Fecha de la última modificación de la póliza', 
+	  forma_pago varchar(8) COMMENT 'Forma de pago que usa el cliente', 
+	  mail varchar(50) COMMENT 'Mail del cliente', 
+	  tipo_telefono_1 varchar(1) COMMENT 'Tipo de teléfono 1', 
+	  telefono_1 varchar(30) COMMENT 'Número de teléfono 1', 
+	  tipo_telefono_2 varchar(1) COMMENT 'Tipo de teléfono 2', 
+	  telefono_2 varchar(30) COMMENT 'Número de teléfono 1',
+	  canal int COMMENT 'Canal de ingreso a Qualia', 
+	  entidad varchar(3) COMMENT 'Entidad a la que pertenece el cliente')
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/02-curated/clientes/dim_mov_cliente_consolidado';

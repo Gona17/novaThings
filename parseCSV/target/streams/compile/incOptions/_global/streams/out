@@ -1,0 +1,11 @@
+[debug] Created transactional ClassFileManager with tempDir = E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes.bak
+[debug] About to delete class files:
+[debug] 	Entry.class
+[debug] 	Entry$.class
+[debug] We backup class files:
+[debug] 	Entry.class
+[debug] 	Entry$.class
+[debug] Registering generated classes:
+[debug] 	Entry.class
+[debug] 	Entry$.class
+[debug] Removing the temporary directory used for backing up class files: E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes.bak

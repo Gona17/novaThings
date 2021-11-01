@@ -1,0 +1,9 @@
+select cc.id_cliente_core,cc.n_cliente,cc.nro_poliza, cc.cod_ramo,cc.ramo,cc.producto,cc.nro_poliza_renovada,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_alta,cc.fecha_emision_poliza,cc.fecha_baja, max(cc.fecha_ult_modificacion) from de_qua_1raw.sms_base sb
+inner join de_qua_2cur.dim_mov_cliente_consolidado cc
+on sb.id_cliente = cast(cc.id_cliente_core as bigint)
+where sb.entidad = upper(cc.entidad) and cc.fecha_vig_desde > '20210921'-- and cc.nro_poliza_renovada is null
+group by cc.id_cliente_core,cc.n_cliente,cc.nro_poliza, cc.cod_ramo,cc.ramo,cc.producto,cc.nro_poliza_renovada,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_alta,cc.fecha_emision_poliza,cc.fecha_baja
+;
+
+select * from de_qua_1raw.sms_base
+where id_cliente = 300016435057;

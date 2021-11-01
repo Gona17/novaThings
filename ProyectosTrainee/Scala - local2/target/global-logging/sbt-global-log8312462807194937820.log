@@ -1,0 +1,89 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.4.7 (Private Build Java 1.8.0_292)
+[debug]       Load.loadUnit: plugins took 127.593982ms
+[debug]       Load.loadUnit: defsScala took 0.737685ms
+[debug] [Loading] Scanning directory /home/gonza/.sbt/1.0/plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/gonza/.sbt/1.0/plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(List(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin))), Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 59.186012 ms
+[debug]           Load.resolveProject(global-plugins) took 235.500246ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: /home/gonza/.sbt/1.0/plugins, plugins: List(<none>))) took 366.999502ms
+[debug] [Loading] Done in /home/gonza/.sbt/1.0/plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 407.945928ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.383547ms
+[debug]     Load.loadUnit(file:/home/gonza/.sbt/1.0/plugins/, ...) took 549.403924ms
+[debug]   Load.apply: load took 717.429363ms
+[debug]   Load.apply: resolveProjects took 7.80105ms
+[debug]   Load.apply: finalTransforms took 60.730671ms
+[debug]   Load.apply: config.delegates took 8.35125ms
+[debug]   Load.apply: Def.make(settings)... took 436.532973ms
+[debug]   Load.apply: structureIndex took 127.464348ms
+[debug]   Load.apply: mkStreams took 1.658696ms
+[info] loading global plugins from /home/gonza/.sbt/1.0/plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 2913.126998ms
+[debug]           Load.loadUnit: plugins took 14.211009ms
+[debug]           Load.loadUnit: defsScala took 0.003249ms
+[debug] [Loading] Scanning directory /home/gonza/Escritorio/InteliJ/project
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/gonza/Escritorio/InteliJ/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(List(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin))), Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 2.24011 ms
+[debug]               Load.resolveProject(intelij-build) took 1.413184ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id intelij-build, base: /home/gonza/Escritorio/InteliJ/project, plugins: List(<none>))) took 4.250919ms
+[debug] [Loading] Done in /home/gonza/Escritorio/InteliJ/project, returning: (intelij-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 5.762159ms
+[debug]           Load.loadUnit: cleanEvalClasses took 0.018159ms
+[debug]         Load.loadUnit(file:/home/gonza/Escritorio/InteliJ/project/, ...) took 20.755761ms
+[debug]       Load.apply: load took 22.283163ms
+[debug]       Load.apply: resolveProjects took 0.141403ms
+[debug]       Load.apply: finalTransforms took 15.371458ms
+[debug]       Load.apply: config.delegates took 0.527385ms
+[debug]       Load.apply: Def.make(settings)... took 121.5828ms
+[debug]       Load.apply: structureIndex took 40.579385ms
+[debug]       Load.apply: mkStreams took 0.003226ms
+[info] loading project definition from /home/gonza/Escritorio/InteliJ/project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 350.057373ms
+[debug]     Load.loadUnit: defsScala took 0.002728ms
+[debug] [Loading] Scanning directory /home/gonza/Escritorio/InteliJ
+[debug]       Load.loadUnit: mkEval took 5.634755ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/gonza/Escritorio/InteliJ, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(List(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin))), Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin))), Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin))), Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin))), Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 2.059517 ms
+[info] loading settings for project intelij from build.sbt ...
+[debug]         Load.resolveProject(intelij) took 2.909195ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id intelij, base: /home/gonza/Escritorio/InteliJ, plugins: List(<none>))) took 5.698402ms
+[debug] [Loading] Done in /home/gonza/Escritorio/InteliJ, returning: (intelij)
+[debug]     Load.loadUnit: loadedProjectsRaw took 2424.958389ms
+[debug]     Load.loadUnit: cleanEvalClasses took 5.318877ms
+[debug]   Load.loadUnit(file:/home/gonza/Escritorio/InteliJ/, ...) took 2781.049105ms
+[debug] Load.apply: load took 2782.135617ms
+[debug] Load.apply: resolveProjects took 0.109527ms
+[debug] Load.apply: finalTransforms took 7.19543ms
+[debug] Load.apply: config.delegates took 0.503278ms
+[debug] Load.apply: Def.make(settings)... took 105.267704ms
+[debug] Load.apply: structureIndex took 23.050836ms
+[debug] Load.apply: mkStreams took 0.003687ms
+[info] set current project to InteliJ (in build file:/home/gonza/Escritorio/InteliJ/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(shell, None, None)
+[info] sbt server started at local:///home/gonza/.sbt/1.0/server/fe44f870bf4115576551/sock
+[info] started sbt server

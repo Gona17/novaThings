@@ -1,0 +1,74 @@
+with table_cat as (
+select distinct cp.id_prospecto as id_prospecto,cp.cat as id_categoria,ft.cantidad_consumos as cantidad_consumos from de_qua_3ref.ft_prospectos ft
+inner join de_qua_3ref.cliente_categoria_producto cp
+on ft.id_prospecto = cp.id_prospecto
+--group by cp.id_prospecto,cp.cat
+), tabla as (
+select distinct
+sha(cr.id_cliente_core) as id_prospecto
+, cast(cr.id_persona as bigint) as id_persona
+, null as id_campania_sms
+, cast(cr.campaniaid as int) as id_campania_cc
+, tc.id_categoria as id_categoria
+, CASE tc.id_categoria WHEN 0 THEN 'NO CONSUMO' WHEN  1 THEN  'VIAJES' WHEN  2 THEN  'CONSTRUCCION' WHEN  3 THEN  'SALUD' WHEN  4 THEN  'OCIO' WHEN  5 THEN  'ECOMMERCE' WHEN  6 THEN  'TECNOLOGIA Y COMUNICACIONES' WHEN  7 THEN  'MOVILIDAD' WHEN  8 THEN  'EDUCACION' WHEN  9 THEN  'OFICINA' WHEN  10 THEN  'DEPORTE' WHEN  11 THEN  'VIDA DIARIA' WHEN  12 THEN  'MASCOTAS' WHEN  13 THEN  'LUJO' WHEN  14 THEN  'HOGAR' WHEN  15 THEN  'SEGURIDAD' WHEN  16 THEN  'OTROS' ELSE 'NO APLICA' END AS descripcion_categoria
+, null as q_consumos--CASE WHEN tc.cantidad_consumos IS NOT NULL THEN sum(tc.cantidad_consumos) ELSE 0 END as q_consumos
+, max(fp.fecha_max_consumo) as ult_transaccion
+, COLLECT_set(cr.combinacionproductos) as producto_ofrecido
+, 'callcenter' as canal
+, CASE WHEN cr.gruporesultadoid in (4,7,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28) THEN '1' WHEN cr.gruporesultadoid in (8,9,10) THEN '2' ELSE '0' END as resultado_campania 
+, cr.fechainicio as fecha_resultado
+, cr.descripcion as mensaje_resultado
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN 'S' ELSE 'N' END as adq_prod
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN cc.producto ELSE NULL END as prod_ad
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN cc.fecha_vig_desde ELSE NULL END AS fech_ad
+from de_qua_2cur.dim_cc_resultado cr
+left join de_qua_3ref.ft_prospectos fp
+on sha(cr.id_cliente_core) = fp.id_prospecto
+left join de_qua_2cur.dim_mov_cliente_consolidado cc
+on cr.id_cliente_core = cc.id_cliente_core
+inner join table_cat tc
+on fp.id_prospecto = tc.id_prospecto
+group by cr.id_cliente_core,cr.id_persona,cr.campaniaid,tc.id_categoria,/*tc.cantidad_consumos,fp.fecha_max_consumo,*/cr.gruporesultadoid,cr.fechainicio,cr.descripcion,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.nro_poliza_renovada,cc.producto
+)
+select distinct id_prospecto,id_persona,id_campania_sms,id_campania_cc,id_categoria,descripcion_categoria,q_consumos,ult_transaccion,producto_ofrecido,canal,resultado_campania,fecha_resultado,mensaje_resultado,case when adq_prod = 'S' and resultado_campania != '1' THEN 'N' WHEN adq_prod = 'S' and resultado_campania = '1' THEN 'S' else 'N' end as adquirio_producto,case when adq_prod = 'S' and resultado_campania != '1' THEN NULL WHEN adq_prod = 'S' and resultado_campania = '1' THEN prod_ad else NULL end as producto_adquirido,CASE WHEN adq_prod = 'S' and resultado_campania != '1' THEN NULL WHEN adq_prod = 'S' and resultado_campania = '1' THEN fech_ad else null end as fecha_adquisicion from tabla
+group by id_prospecto,id_persona,id_campania_sms,id_campania_cc,id_categoria,descripcion_categoria,q_consumos,ult_transaccion,producto_ofrecido,canal,resultado_campania,fecha_resultado,mensaje_resultado,adq_prod,prod_ad,fech_ad
+;
+
+
+
+
+
+
+
+---OTRO:
+
+
+
+with tabla as (
+select distinct
+sha(cr.id_cliente_core) as id_prospecto
+, cast(cr.id_persona as bigint) as id_persona
+, null as id_campania_sms
+, cast(cr.campaniaid as int) as id_campania_cc
+, fp.categoria as id_categoria
+, CASE fp.categoria WHEN 0 THEN 'NO CONSUMO' WHEN  1 THEN  'VIAJES' WHEN  2 THEN  'CONSTRUCCION' WHEN  3 THEN  'SALUD' WHEN  4 THEN  'OCIO' WHEN  5 THEN  'ECOMMERCE' WHEN  6 THEN  'TECNOLOGIA Y COMUNICACIONES' WHEN  7 THEN  'MOVILIDAD' WHEN  8 THEN  'EDUCACION' WHEN  9 THEN  'OFICINA' WHEN  10 THEN  'DEPORTE' WHEN  11 THEN  'VIDA DIARIA' WHEN  12 THEN  'MASCOTAS' WHEN  13 THEN  'LUJO' WHEN  14 THEN  'HOGAR' WHEN  15 THEN  'SEGURIDAD' WHEN  16 THEN  'OTROS' ELSE 'NO APLICA' END AS descripcion_categoria
+, fp.cantidad_consumos as q_consumos--CASE WHEN tc.cantidad_consumos IS NOT NULL THEN max(tc.cantidad_consumos) ELSE 0 END as q_consumos
+, fp.fecha_max_consumo as ult_transaccion
+, cr.combinacionproductos as producto_ofrecido
+, 'callcenter' as canal
+, CASE WHEN cr.gruporesultadoid in (4,7,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28) THEN '1' WHEN cr.gruporesultadoid in (6,8,9,10) THEN '2' ELSE '0' END as resultado_campania 
+, cr.fechainicio as fecha_resultado
+, cr.descripcion as mensaje_resultado
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN 'S' ELSE 'N' END as adq_prod
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN cc.producto ELSE NULL END as prod_ad
+, CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and cc.fecha_vig_hasta != '' and cc.fecha_vig_desde >= cr.fechainicio and cc.nro_poliza_renovada is NULL THEN cc.fecha_vig_desde ELSE NULL END AS fech_ad
+from de_qua_2cur.dim_cc_resultado cr
+left join de_qua_3ref.ft_prospectos fp
+on sha(cr.id_cliente_core) = fp.id_prospecto
+left join de_qua_2cur.dim_mov_cliente_consolidado cc
+on cr.id_cliente_core = cc.id_cliente_core
+)
+select distinct id_prospecto,id_persona,id_campania_sms,id_campania_cc,COLLECT_set(id_categoria) as id_categoria,COLLECT_set(descripcion_categoria) as descripcion_categoria,COLLECT_set(q_consumos) as q_consumos,COLLECT_set(ult_transaccion) as ult_transaccion,COLLECT_set(producto_ofrecido) as producto_ofrecido,canal,resultado_campania,fecha_resultado,mensaje_resultado,case when adq_prod = 'S' and resultado_campania != '1' THEN 'N' WHEN adq_prod = 'S' and resultado_campania = '1' THEN 'S' else 'N' end as adquirio_producto,case when adq_prod = 'S' and resultado_campania != '1' THEN NULL WHEN adq_prod = 'S' and resultado_campania = '1' THEN prod_ad else NULL end as producto_adquirido,CASE WHEN adq_prod = 'S' and resultado_campania != '1' THEN NULL WHEN adq_prod = 'S' and resultado_campania = '1' THEN fech_ad else null end as fecha_adquisicion 
+from tabla
+group by id_prospecto,id_persona,id_campania_sms,id_campania_cc,canal,resultado_campania,fecha_resultado,mensaje_resultado,adq_prod,prod_ad,fech_ad
+order by id_persona desc;

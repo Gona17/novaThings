@@ -1,0 +1,17 @@
+[debug] Packaging E:\Escritorio\Nova\parseCSV\target\scala-2.11\parsecsv_2.11-0.1.jar ...
+[debug] Input file mappings:
+[debug] 	org
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org
+[debug] 	org\novakorp
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp
+[debug] 	org\novakorp\io
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp\io
+[debug] 	org\novakorp\io\Entry$.class
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp\io\Entry$.class
+[debug] 	org\novakorp\io\Entry.class
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp\io\Entry.class
+[debug] 	org\novakorp\io\SparkSessionWrapper$class.class
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp\io\SparkSessionWrapper$class.class
+[debug] 	org\novakorp\io\SparkSessionWrapper.class
+[debug] 	  E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes\org\novakorp\io\SparkSessionWrapper.class
+[debug] Done packaging.

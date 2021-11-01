@@ -1,0 +1,16 @@
+CREATE EXTERNAL TABLE de_bsf_3ref.ft_nbo_qualia_categorias_consumo(
+	  id_cliente_core bigint COMMENT 'Número de identificación del cliente en el Core Bancario', 
+      id_persona bigint COMMENT 'Id de la persona (cuit)',
+	  id_transaccion int, 
+	  fecha_transaccion string, 
+	  mto_transaccion decimal(13,2), 
+	  id_moneda string COMMENT 'Código de la moneda', 
+	  id_tarjetera string COMMENT '"VI" cuando es Prisma\; "MC" cuando es Credencial', 
+	  id_rubro int, 
+	  id_categoria int)
+	COMMENT 'Contiene el perfil financiero de los clientes de los Bancos en relación a sus comportamientos de consumo, acreditaciones en cuenta, situación en AFIP/BCRA, acreditaciones de haberes, etc.'
+	PARTITIONED BY ( 
+	  fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION
+	  'hdfs://nameservice1/user/admin/dev/bsf/03-ref/qualia/ft_nbo_qualia_categorias_consumo'

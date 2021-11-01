@@ -1,0 +1,32 @@
+	CREATE EXTERNAL TABLE de_qua_2cur.dim_cc_resultado(
+	  id_cliente_core bigint, 
+	  id_persona bigint,
+	  contactoid string, 
+	  nombrecompleto string, 
+	  fechanacimiento string, 
+	  es_clientequalia varchar(1), 
+	  es_empleado varchar(1), 
+	  es_bajapormora varchar(1), 
+	  codpostal string, 
+	  provincia string, 
+	  sexo string, 
+	  telefono1 string, 
+	  telefono2 string, 
+	  telefono3 string, 
+	  telefono4 string, 
+	  telefono5 string, 
+	  mail string, 
+	  campaniaid bigint, 
+	  fechainicio string, 
+	  grupoagenteid bigint, 
+	  combinacionproductosid bigint, 
+	  combinacionproductos string, 
+	  resultadoid bigint, 
+	  gruporesultadoid bigint, 
+	  descripcion string, 
+	  telefonocontactado string)
+	PARTITIONED BY ( 
+	  fecha_proceso varchar(8))
+	STORED AS PARQUET	
+    LOCATION
+	  'hdfs://nameservice1/user/admin/dev/qualia/02-curated/Dim_cc_resultado'

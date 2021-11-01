@@ -1,0 +1,7 @@
+[debug] > Exec(package, None, None)
+[debug] Evaluating tasks: Compile / package
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to E:\Escritorio\Nova\parseCSV\target\scala-2.11\classes ...
+[info] done compiling
+[success] Total time: 5 s, completed 20/10/2021 19:33:00
+[debug] > Exec(idea-shell, None, None)

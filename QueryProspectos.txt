@@ -1,0 +1,32 @@
+WITH fecha_max_$ENTIDAD AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          MAX(fp.fecha_transaccion) fecha_max
+   FROM de_$ENTIDAD_3ref.ft_nbo_qualia_categorias_consumo fp
+   WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     cat_count_$ENTIDAD AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          COUNT(1) COUNT
+   FROM de_$ENTIDAD_3ref.ft_nbo_qualia_categorias_consumo fp
+   WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     todo_$ENTIDAD AS
+  (SELECT f.id_cliente_core,
+          f.id_categoria,
+          f.fecha_max,
+          c.count
+   FROM fecha_max_$ENTIDAD f
+   INNER JOIN cat_count_$ENTIDAD c ON f.id_cliente_core = c.id_cliente_core
+   AND f.id_categoria = c.id_categoria)
+SELECT rc.id_cliente_core_protegido AS id_prospecto,
+       t.id_categoria AS categoria,
+       CAST(t.fecha_max AS VARCHAR(8)) AS fecha_max_consumo,
+       CAST(t.count AS INT) AS cantidad_consumos
+FROM todo_$ENTIDAD t
+INNER JOIN de_$ENTIDAD_3ref.rel_cliente_core_protegido rc ON t.id_cliente_core = rc.id_cliente_core
+ORDER BY rc.id_cliente_core_protegido,
+         t.id_categoria

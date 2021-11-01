@@ -1,0 +1,14 @@
+CREATE EXTERNAL TABLE de_qua_3ref.ft_audiencia_publicitaria(
+      id_prospecto string comment 'ID protegido del cliente',
+	  id_persona bigint COMMENT 'ID persona del cliente', 
+	  Nom_persona string COMMENT 'Nombre del cliente', 
+	  Ape_persona string COMMENT 'Apellido del cliente', 
+	  Tipo_contacto string COMMENT 'Tipo de contacto para comunicarse', 
+	  Nro_cel bigint COMMENT 'Número de teléfono del cliente', 
+	  Id_Cod_Rubro int COMMENT 'Id', 
+	  entidad varchar(3) COMMENT 'Entidad a la que pertenece el cliente',
+	  cod_rubro varchar(2) COMMENT 'Código del producto', 
+	  producto string COMMENT 'Descripción del producto')
+	PARTITIONED BY (fecha_proceso varchar(8))
+	STORED AS PARQUET 
+	LOCATION 'hdfs://nameservice1/user/admin/dev/qualia/03-refined/ft_audiencia_publicitaria';

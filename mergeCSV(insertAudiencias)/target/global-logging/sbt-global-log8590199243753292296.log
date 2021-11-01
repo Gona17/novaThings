@@ -1,0 +1,8 @@
+[debug] > Exec(package, None, None)
+[debug] Evaluating tasks: Compile / package
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to E:\Escritorio\Nova\mergeCSV(insertAudiencias)\target\scala-2.11\classes ...
+[info] done compiling
+[debug] Forcing garbage collection...
+[success] Total time: 1 s, completed 21/10/2021 15:56:35
+[debug] > Exec(idea-shell, None, None)

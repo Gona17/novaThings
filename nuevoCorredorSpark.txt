@@ -1,0 +1,3 @@
+--nueva forma de spark job
+
+submit_spark_job .jar dev

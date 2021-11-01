@@ -1,0 +1,26 @@
+[debug] Created transactional ClassFileManager with tempDir = E:\Escritorio\Nova\pruebaCampa\target\scala-2.11\classes.bak
+[debug] About to delete class files:
+[debug] We backup class files:
+[debug] Registering generated classes:
+[debug] 	SparkSessionWrapper.class
+[debug] 	Entry$TelefonoQualia$.class
+[debug] 	FunctionsWrapper$$typecreator2$1.class
+[debug] 	FunctionsWrapper$$anonfun$addQualiaProd$1.class
+[debug] 	Entry.class
+[debug] 	Entry$TelefonoQualia.class
+[debug] 	FunctionsWrapper$$typecreator3$1.class
+[debug] 	FunctionsWrapper.class
+[debug] 	FunctionsWrapper$$typecreator4$1.class
+[debug] 	FunctionsWrapper$$anonfun$createPhoneNumber$1.class
+[debug] 	Entry$$anonfun$main$1.class
+[debug] 	FunctionsWrapper$$typecreator1$1.class
+[debug] 	Entry$.class
+[debug] 	Entry$$typecreator5$1.class
+[debug] 	Entry$$anonfun$main$1$$anonfun$1.class
+[debug] 	DataFrameWrapper$class.class
+[debug] 	DataFrameWrapper.class
+[debug] 	SparkSessionWrapper$class.class
+[debug] 	FunctionsWrapper$$anonfun$addQualiaProd$1$$anonfun$1.class
+[debug] 	FunctionsWrapper$class.class
+[debug] 	DataFrameWrapper$$anonfun$createBigDF$1.class
+[debug] Removing the temporary directory used for backing up class files: E:\Escritorio\Nova\pruebaCampa\target\scala-2.11\classes.bak

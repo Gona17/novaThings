@@ -1,0 +1,21 @@
+CREATE EXTERNAL TABLE de_bsf_2cur.dim_empleados_bancos (
+    id_persona BIGINT COMMENT 'Id persona del Cliente'
+    ,   id_cliente_core BIGINT  COMMENT 'Id core del Cliente'
+    ,   nro_documento BIGINT COMMENT 'Documento del empleado'
+    ,   codigo_empleado BIGINT COMMENT 'Codigo del empleado en Meta4'
+    ,   cod_estado_empleado INT COMMENT 'Codigo del estado del empleado'
+    ,   desc_estado_empleado STRING COMMENT 'Descripcion del estado del empleado'
+    ,   cod_sector_empleado STRING COMMENT 'Codigo del sector en que se desempeña'
+    ,   desc_sector_empleado STRING COMMENT 'Descripcion del sector en que se desempeña'
+    ,   fecha_ingreso_emp DATE COMMENT 'Fecha del ingresoo del empleado'
+    ,   fecha_baja_emp DATE COMMENT 'Fecha de egreso o baja del empleado'
+    ,   numero_filial INT COMMENT 'Numero de sucursal'
+    ,   banco_filial STRING COMMENT 'Nombre de sucursal'
+    ,   cod_puesto_empleado BIGINT COMMENT 'Codigo del puesto que ocupa'
+    ,   desc_puesto_empleado STRING COMMENT 'Descripcion del puesto que ocupa'
+    ,   usuario_empleado STRING COMMENT 'Nombre de usuario dentro de la institucion'
+    ) 
+    COMMENT 'Listado de empleados de los Bancos' 
+    PARTITIONED BY (fecha_proceso VARCHAR(8))  
+    STORED AS PARQUET 
+    LOCATION 'hdfs://nameservice1/user/admin/dev/bsf/02-cur/qualia/dim_empleados_bancos' 
