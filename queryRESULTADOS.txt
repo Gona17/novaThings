@@ -1,3 +1,5 @@
+
+
 with clicks as(
 select distinct cast(sc.telefono_sms as bigint) as telefono_sms, sc.cantidad_clicks_sms as cant_clicks, sc.fecha_ultimo_click as fecha_ultimo_click, null as rsta_mensaje
 from de_qua_2cur.dim_qualia_sms_clicks sc
@@ -11,10 +13,10 @@ select distinct
 , sb.id_cliente as id_cliente
 , sha(sb.id_cliente) as id_prospecto
 , cc.id_persona as id_persona
-, collect_set(fp.categoria) as id_categoria
+, collect_set(cast(fp.categoria as string)) as id_categoria
 , collect_set(CASE fp.categoria WHEN -1 THEN 'NO INFORMADO' WHEN -2 THEN 'NO APLICA' WHEN -3 THEN 'NO ENCONTRADO EN TRADUCTORA' WHEN 0 THEN 'NO CONSUMO' WHEN  1 THEN  'VIAJES' WHEN  2 THEN  'CONSTRUCCION' WHEN  3 THEN  'SALUD' WHEN  4 THEN  'OCIO' WHEN  5 THEN  'ECOMMERCE' WHEN  6 THEN  'TECNOLOGIA Y COMUNICACIONES' WHEN  7 THEN  'MOVILIDAD' WHEN  8 THEN  'EDUCACION' WHEN  9 THEN  'OFICINA' WHEN  10 THEN  'DEPORTE' WHEN  11 THEN  'VIDA DIARIA' WHEN  12 THEN  'MASCOTAS' WHEN  13 THEN  'LUJO' WHEN  14 THEN  'HOGAR' WHEN  15 THEN  'SEGURIDAD' WHEN  16 THEN  'OTROS' ELSE 'NO TUVO CONSUMOS PASADOS' END) AS descripcion_categoria
-, collect_set(CASE WHEN fp.cantidad_consumos IS NOT NULL THEN fp.cantidad_consumos ELSE 0 END) as q_consumos
-, collect_set(fp.fecha_max_consumo) as ult_transaccion
+, collect_set(cast(fp.cantidad_consumos as string)) as q_consumos
+, collect_set(cast(fp.fecha_max_consumo as string)) as ult_transaccion
 , sb.n_producto as producto_ofrecido
 , sb.tel_1 as contacto
 , CASE WHEN dc.cant_clicks >= 1 THEN '1' WHEN dc.cant_clicks = -1 THEN '2' ELSE '0' END AS realizo_click
@@ -24,6 +26,7 @@ select distinct
 , dc.fecha_ultimo_click as fecha_ultimo_click
 , dc.rsta_mensaje as mensaje_sms
 , sb.fecha_proceso as fecha_proceso
+, cc.canal
 from de_qua_1raw.sms_base sb
 left join clicks dc
 on sb.tel_1 = dc.telefono_sms
@@ -31,27 +34,32 @@ left join de_qua_2cur.dim_mov_cliente_consolidado cc
 on sb.id_cliente = cc.id_cliente_core
 left join de_qua_3ref.ft_prospectos fp
 on sha(sb.id_cliente) = fp.id_prospecto
-group by sb.id_cliente,cc.id_persona,sb.n_producto,sb.tel_1,dc.cant_clicks,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_emision_poliza,cc.nro_poliza_renovada,cc.producto,dc.fecha_ultimo_click,dc.rsta_mensaje,sb.fecha_proceso
+group by sb.id_cliente,cc.id_persona,sb.n_producto,sb.tel_1,dc.cant_clicks,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_emision_poliza,cc.nro_poliza_renovada,cc.producto,dc.fecha_ultimo_click,dc.rsta_mensaje,sb.fecha_proceso,cc.canal
 )
+
 select distinct
  tt.id_prospecto
 ,CASE WHEN tt.id_persona IS NULL THEN tt.id_cliente ELSE tt.id_persona end
 ,tt.id_campania as id_campania_sms
 ,null as id_campania_cc
-, tt.id_categoria
-, tt.descripcion_categoria
-, tt.q_consumos
-, tt.ult_transaccion
-, tt.producto_ofrecido
+, concat_ws(',',tt.id_categoria) as id_categoria
+, concat_ws(',',tt.descripcion_categoria) as descripcion_categoria
+, concat_ws(',',tt.q_consumos) as q_consumos
+, concat_ws(',',tt.ult_transaccion) as ult_transaccion
+, concat_ws(',',tt.producto_ofrecido) as producto_ofrecido
 , 'SMS' as canal
 , tt.realizo_click as resultado_campania
 , '20210826' as fecha_resultado--CASE WHEN tt.realizo_click = '1' THEN tt.fecha_ultimo_click ELSE NULL END as fecha_resultado
 , tt.mensaje_sms as mensaje_resultado
 , tt.adquirio_producto
-, collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.prod_adquirido ELSE NULL END) as producto_adquirido
-, collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.fecha_adquirido ELSE NULL END) as fecha_adquisicion
+, concat_ws(',',collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.prod_adquirido ELSE NULL END)) as producto_adquirido
+, concat_ws(',',collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.fecha_adquirido ELSE NULL END)) as fecha_adquisicion
+, CASE WHEN tt.adquirio_producto = 'S' THEN tt.canal ELSE NULL END as canal_venta
+, '20210826' as fecha_proceso
 from tabla tt
-group by tt.id_prospecto,tt.id_persona,tt.id_cliente,tt.id_campania,tt.id_categoria,tt.descripcion_categoria,tt.q_consumos,tt.ult_transaccion,tt.producto_ofrecido,tt.realizo_click,tt.mensaje_sms,tt.adquirio_producto,tt.prod_adquirido,tt.fecha_adquirido;
+group by tt.id_prospecto,tt.id_persona,tt.id_cliente,tt.id_campania,tt.id_categoria,tt.descripcion_categoria,tt.q_consumos
+,tt.ult_transaccion,tt.producto_ofrecido,tt.realizo_click,tt.mensaje_sms,tt.adquirio_producto,tt.canal 
+;
 
 
 
@@ -132,19 +140,19 @@ select
 count(distinct ap.fecha_proceso)+1 as id_campania
 , ap.id_prospecto as id_prospecto
 , ap.id_persona as id_persona
-, collect_set(fp.categoria) as id_categoria
-, collect_set(CASE fp.categoria WHEN 0 THEN 'NO CONSUMO' WHEN  1 THEN  'VIAJES' WHEN  2 THEN  'CONSTRUCCION' WHEN  3 THEN  'SALUD' WHEN  4 THEN  'OCIO' WHEN  5 THEN  'ECOMMERCE' WHEN  6 THEN  'TECNOLOGIA Y COMUNICACIONES' WHEN  7 THEN  'MOVILIDAD' WHEN  8 THEN  'EDUCACION' WHEN  9 THEN  'OFICINA' WHEN  10 THEN  'DEPORTE' WHEN  11 THEN  'VIDA DIARIA' WHEN  12 THEN  'MASCOTAS' WHEN  13 THEN  'LUJO' WHEN  14 THEN  'HOGAR' WHEN  15 THEN  'SEGURIDAD' WHEN  16 THEN  'OTROS' ELSE 'NO APLICA' END) AS descripcion_categoria
-,collect_set(fp.cantidad_consumos) as q_consumos
-,collect_set(fp.fecha_max_consumo) as ult_transaccion
+, collect_set(cast(fp.categoria as string)) as id_categoria
+, collect_set(CASE fp.categoria WHEN -1 THEN 'NO INFORMADO' WHEN -2 THEN 'NO APLICA' WHEN -3 THEN 'NO ENCONTRADO EN TRADUCTORA' WHEN 0 THEN 'NO CONSUMO' WHEN  1 THEN  'VIAJES' WHEN  2 THEN  'CONSTRUCCION' WHEN  3 THEN  'SALUD' WHEN  4 THEN  'OCIO' WHEN  5 THEN  'ECOMMERCE' WHEN  6 THEN  'TECNOLOGIA Y COMUNICACIONES' WHEN  7 THEN  'MOVILIDAD' WHEN  8 THEN  'EDUCACION' WHEN  9 THEN  'OFICINA' WHEN  10 THEN  'DEPORTE' WHEN  11 THEN  'VIDA DIARIA' WHEN  12 THEN  'MASCOTAS' WHEN  13 THEN  'LUJO' WHEN  14 THEN  'HOGAR' WHEN  15 THEN  'SEGURIDAD' WHEN  16 THEN  'OTROS' ELSE 'NO TUVO CONSUMOS PASADOS' END) AS descripcion_categoria
+, collect_set(cast(fp.cantidad_consumos as string)) as q_consumos
+, collect_set(cast(fp.fecha_max_consumo as string)) as ult_transaccion
 ,ap.producto as producto_ofrecido
-,CASE WHEN ap.tipo_contacto = 'telefono' THEN 'SMS' WHEN ap.tipo_contacto = 'mail' THEN 'MAIL' ELSE NULL END as canal
 ,ap.Nro_cel as contacto
 ,CASE WHEN dc.cant_clicks >= 1 THEN '1' WHEN dc.cant_clicks = -1 THEN '2' ELSE '0' END AS realizo_click
-,CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(ap.fecha_proceso as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL THEN 'S' ELSE 'N' END as adquirio_producto
+,CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(dc.fecha_ultimo_click as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL THEN 'S' ELSE 'N' END as adquirio_producto
 ,cc.producto as prod_adquirido
 ,cc.fecha_vig_desde as fecha_adquirido
 ,dc.fecha_ultimo_click as fecha_ultimo_click
 ,dc.rsta_mensaje as mensaje_resultado
+,cc.canal as canal_venta
 ,ap.fecha_proceso as fecha_proceso
 from de_qua_3ref.ft_audiencia_sms ap
 left join clicks dc
@@ -153,25 +161,26 @@ left join de_qua_2cur.dim_mov_cliente_consolidado cc
 on ap.id_persona = cc.id_persona
 left join de_qua_3ref.ft_prospectos fp
 on ap.id_prospecto = fp.id_prospecto 
-group by ap.id_prospecto, ap.id_persona,ap.producto,ap.tipo_contacto,ap.Nro_cel,dc.cant_clicks,cc.producto,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_emision_poliza,cc.nro_poliza_renovada,dc.fecha_ultimo_click,dc.rsta_mensaje,ap.fecha_proceso
+group by ap.id_prospecto, ap.id_persona,ap.producto,ap.tipo_contacto,ap.Nro_cel,dc.cant_clicks,cc.producto,cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_emision_poliza,cc.nro_poliza_renovada,dc.fecha_ultimo_click,dc.rsta_mensaje,cc.canal,ap.fecha_proceso
 )
 select distinct
  tt.id_prospecto
 , tt.id_persona
 , tt.id_campania as id_campania_sms
 , null as id_campania_cc
-, tt.id_categoria
-, tt.descripcion_categoria
-, tt.q_consumos
-, tt.ult_transaccion
-, tt.producto_ofrecido
-, tt.canal
+, concat_ws(',',tt.id_categoria) as id_categoria
+, concat_ws(',',tt.descripcion_categoria) as descripcion_categoria
+, concat_ws(',',tt.q_consumos) as q_consumos
+, concat_ws(',',tt.ult_transaccion) as ult_transaccion
+, concat_ws(',',tt.producto_ofrecido) as producto_ofrecido
+, 'SMS' as canal
 , tt.realizo_click as resultado_campania
 , tt.fecha_proceso as fecha_resultado
 , tt.mensaje_resultado
 , tt.adquirio_producto
-, collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.prod_adquirido ELSE NULL END) as producto_adquirido
-, collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.fecha_adquirido ELSE NULL END) as fecha_adquisicion
+, concat_ws(',',collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.prod_adquirido ELSE NULL END)) as producto_adquirido
+, concat_ws(',',collect_set(CASE WHEN tt.adquirio_producto = 'S' THEN tt.fecha_adquirido ELSE NULL END)) as fecha_adquisicion
+, CASE WHEN tt.adquirio_producto = 'S' THEN tt.canal_venta ELSE NULL END as canal_venta
 from tabla tt
 group by  tt.id_prospecto
 , tt.id_persona
@@ -186,6 +195,7 @@ group by  tt.id_prospecto
 , tt.fecha_proceso
 , tt.mensaje_resultado
 , tt.adquirio_producto
+, tt.canal
 ;
 
 
@@ -246,7 +256,7 @@ FROM de_qua_2cur.dim_cc_resultado cr
 )
 ,propectos as(
 SELECT DISTINCT fp.id_prospecto ,
-                fp.categoria AS id_categoria ,
+                cast(fp.categoria as string) AS id_categoria ,
                 CASE fp.categoria
                     WHEN 0 THEN 'NO CONSUMO'
                     WHEN 1 THEN 'VIAJES'
@@ -267,8 +277,8 @@ SELECT DISTINCT fp.id_prospecto ,
                     WHEN 16 THEN 'OTROS'
                     ELSE 'NO APLICA'
                 END AS descripcion_categoria ,
-                fp.cantidad_consumos AS q_consumos
-                ,fp.fecha_max_consumo AS ult_transaccion
+                cast(fp.cantidad_consumos as string) AS q_consumos
+                , cast(fp.fecha_max_consumo as string) AS ult_transaccion
 FROM de_qua_3ref.ft_prospectos fp
 )
 ,clientesQua as(
@@ -278,7 +288,8 @@ SELECT DISTINCT cc.id_cliente_core,
                 cc.fecha_vig_desde,
                 cc.fecha_vig_hasta,
                 cc.fecha_emision_poliza,
-                cc.nro_poliza_renovada
+                cc.nro_poliza_renovada,
+		cc.canal
 FROM de_qua_2cur.dim_mov_cliente_consolidado cc
 )
 ,callprospectos as (
@@ -323,6 +334,7 @@ SELECT distinct
                 collect_set(CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(cp.fecha_resultado as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL and cp.resultado_campania = '1' THEN 'S' ELSE 'N' END) as adquirio_producto,
                 collect_set(CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(cp.fecha_resultado as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL and cp.resultado_campania = '1' THEN cc.producto ELSE NULL END) as producto_adquirido,
                 collect_set(CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(cp.fecha_resultado as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL and cp.resultado_campania = '1' THEN cc.fecha_vig_desde ELSE NULL END) as fecha_adquisicion
+		        ,CASE WHEN cc.fecha_vig_desde != cc.fecha_vig_hasta and trim(cc.fecha_emision_poliza) = ''  and (cast(cc.fecha_vig_desde as bigint) - cast(cp.fecha_resultado as bigint)) between 0 and 15 and cc.nro_poliza_renovada is NULL and cp.resultado_campania = '1' THEN cc.canal ELSE NULL end as canal_venta
 FROM callprospectos cp
 LEFT JOIN clientesQua cc 
 ON cp.id_cliente_core = cc.id_cliente_core
@@ -336,25 +348,28 @@ GROUP BY        cp.id_prospecto,
                 cp.producto_ofrecido,
                 cp.resultado_campania,
                 cp.fecha_resultado,
-                cp.mensaje_resultado
+                cp.mensaje_resultado,
+                cc.fecha_vig_desde,cc.fecha_vig_hasta,cc.fecha_emision_poliza,cc.nro_poliza_renovada,
+		        cc.canal
 )
 select distinct 
                 id_prospecto,
                 id_persona,
                 id_campania_sms,
                 id_campania_cc,
-                id_categoria,
-                descripcion_categoria,
-                q_consumos,
-                ult_transaccion,
-                producto_ofrecido,
+                concat_ws(',',id_categoria) as id_categoria,
+                concat_ws(',',descripcion_categoria) as descripcion_categoria,
+                concat_ws(',',q_consumos) as q_consumos,
+                concat_ws(',',ult_transaccion) as ult_transaccion,
+                concat_ws(',',producto_ofrecido) as producto_ofrecido,
                 canal,
                 resultado_campania,
                 fecha_resultado,
                 mensaje_resultado,
                 CASE WHEN array_contains(adquirio_producto,'S') THEN 'S' ELSE 'N' END AS adquirio_producto,
-                producto_adquirido,
-                fecha_adquisicion
+                concat_ws(',',producto_adquirido) as producto_adquirido,
+                concat_ws(',',fecha_adquisicion) as fecha_adquisicion,
+		        canal_venta,
+		        '20210701' as fecha_proceso
 from tabla
-order by id_persona
 ;

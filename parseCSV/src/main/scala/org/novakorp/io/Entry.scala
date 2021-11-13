@@ -19,6 +19,8 @@ object Entry extends SparkSessionWrapper {
     val fecha_proceso:String = args(0)
     val entidad: String= args(1)
     val producto: String = args(2)
+    val cantidad: String = args(3)
+    val cantidad2: Int = cantidad.toInt
     val path: String= s"hdfs://nameservice1/user/admin/dev/qualia/03-ref/audiencias/${fecha_proceso}/audiencias_$entidad/salidaprod$producto/"
     val df = spark
       .read
@@ -28,12 +30,12 @@ object Entry extends SparkSessionWrapper {
       .csv(path)
     if(entidad == "ber")
     {
-      df.limit(1877).write.option("header", "true").mode("overwrite").csv(s"hdfs://nameservice1/user/admin/dev/qualia/03-ref/audiencias/${fecha_proceso}/audiencias_${entidad}_cortadas/salidaprod$producto")
+      df.limit(cantidad2).write.option("header", "true").mode("overwrite").csv(s"hdfs://nameservice1/user/admin/dev/qualia/03-ref/audiencias/${fecha_proceso}/audiencias_${entidad}_cortadas/salidaprod$producto")
 
     }
     else if(entidad == "bsf")
     {
-      df.limit(3123).write.option("header", "true").mode("overwrite").csv(s"hdfs://nameservice1/user/admin/dev/qualia/03-ref/audiencias/${fecha_proceso}/audiencias_${entidad}_cortadas/salidaprod$producto")
+      df.limit(cantidad2).write.option("header", "true").mode("overwrite").csv(s"hdfs://nameservice1/user/admin/dev/qualia/03-ref/audiencias/${fecha_proceso}/audiencias_${entidad}_cortadas/salidaprod$producto")
     }
 
   }

@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE de_bsf_3ref.abt_perfil_financiero (
+CREATE EXTERNAL TABLE de_qua_3ref.abt_perfil_financiero (
                                 sexo string
                                , estado_civil string
                                , generacion string
@@ -7,11 +7,13 @@ CREATE EXTERNAL TABLE de_bsf_3ref.abt_perfil_financiero (
                                , producto_ofrecido string
                                , resultado_campania string
                                , producto_adquirido string
+                               , fecha_adquisicion string
+                               , canal_venta int
                                , id_campania_sms int
                                , id_campania_cc int
                                , fecha_resultado string
-                               , id_cliente_core bigint
-                               , id_persona bigint
+			       , id_prospecto string
+			       , entidad varchar(3)
                                , riesgo_crediticio_1m string
                                , riesgo_crediticio_3m string
                                , riesgo_crediticio_6m string
@@ -68,4 +70,4 @@ CREATE EXTERNAL TABLE de_bsf_3ref.abt_perfil_financiero (
     COMMENT 'Abt' 
     PARTITIONED BY (fecha_proceso VARCHAR(8))  
     STORED AS PARQUET 
-    LOCATION 'hdfs://nameservice1/user/admin/dev/bsf/03-ref/qualia/abt_perfil_financiero';
+    LOCATION 'hdfs://nameservice1/user/admin/dev/qua/03-ref/qualia/abt_perfil_financiero'

@@ -26,14 +26,16 @@ object Queries {
              , ch.monto_presunto
              , fra.producto_ofrecido
              , CASE
-                 WHEN fra.resultado_campania = 0 THEN
-                   'No hizo click'
+                 WHEN fra.resultado_campania = 2 THEN
+                   'Rechazo la oferta'
                  WHEN fra.resultado_campania = 1 THEN
-                   'Hizo click'
+                   'Mostro interes'
                  ELSE
-                   'Respuesta negativa'
+                   'Sin accion'
                END resultado_campania
              , fra.producto_adquirido
+             , fra.fecha_adquisicion
+             , fra.canal_venta
              , fra.id_campania_sms
              , fra.id_campania_cc
              , fra.fecha_resultado
@@ -43,7 +45,8 @@ object Queries {
              , de_ber_3ref.rel_cliente_core_protegido rccp
              , de_ber_2cur.cliente_homologado_ext ch
          WHERE fra.id_prospecto = rccp.id_cliente_core_protegido
-           AND rccp.id_cliente_core = ch.id_cliente_core """
+           AND rccp.id_cliente_core = ch.id_cliente_core
+           AND fra.canal = 'SMS' """
   }
 
   lazy val q_audiencias_clientes_bsf: String = {
@@ -70,14 +73,16 @@ object Queries {
              , ch.monto_presunto
              , fra.producto_ofrecido
              , CASE
-                 WHEN fra.resultado_campania = 0 THEN
-                   'No hizo click'
+                 WHEN fra.resultado_campania = 2 THEN
+                   'Rechazo la oferta'
                  WHEN fra.resultado_campania = 1 THEN
-                   'Hizo click'
+                   'Mostro interes'
                  ELSE
-                   'Respuesta negativa'
+                   'Sin accion'
                END resultado_campania
              , fra.producto_adquirido
+             , fra.fecha_adquisicion
+             , fra.canal_venta
              , fra.id_campania_sms
              , fra.id_campania_cc
              , fra.fecha_resultado
@@ -87,7 +92,8 @@ object Queries {
              , de_bsf_3ref.rel_cliente_core_protegido rccp
              , de_bsf_2cur.cliente_homologado_ext ch
          WHERE fra.id_prospecto = rccp.id_cliente_core_protegido
-           AND rccp.id_cliente_core = ch.id_cliente_core """
+           AND rccp.id_cliente_core = ch.id_cliente_core
+           AND fra.canal = 'SMS' """
   }
 
   lazy val q_bcra_riesgo: String = {

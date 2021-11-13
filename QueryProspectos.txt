@@ -29,4 +29,78 @@ SELECT rc.id_cliente_core_protegido AS id_prospecto,
 FROM todo_$ENTIDAD t
 INNER JOIN de_$ENTIDAD_3ref.rel_cliente_core_protegido rc ON t.id_cliente_core = rc.id_cliente_core
 ORDER BY rc.id_cliente_core_protegido,
-         t.id_categoria
+         t.id_categoria,
+
+
+
+
+
+
+---insertar ber y bsf juntos
+
+
+WITH fecha_max_ber AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          MAX(fp.fecha_transaccion) fecha_max
+   FROM de_ber_3ref.ft_nbo_qualia_categorias_consumo fp
+   /*WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)*/
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     cat_count_ber AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          COUNT(1) COUNT
+   FROM de_ber_3ref.ft_nbo_qualia_categorias_consumo fp
+   /*WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)*/
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     todo_ber AS
+  (SELECT f.id_cliente_core,
+          f.id_categoria,
+          f.fecha_max,
+          c.count
+   FROM fecha_max_ber f
+   INNER JOIN cat_count_ber c ON f.id_cliente_core = c.id_cliente_core
+   AND f.id_categoria = c.id_categoria)
+, fecha_max_bsf AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          MAX(fp.fecha_transaccion) fecha_max
+   FROM de_bsf_3ref.ft_nbo_qualia_categorias_consumo fp
+   /*WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)*/
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     cat_count_bsf AS
+  (SELECT fp.id_cliente_core,
+          fp.id_categoria,
+          COUNT(1) COUNT
+   FROM de_bsf_3ref.ft_nbo_qualia_categorias_consumo fp
+   /*WHERE fp.fecha_transaccion >= SUBSTR(REPLACE(CAST(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd'), 30) AS STRING), '-', ''), 1, 8)*/
+   GROUP BY fp.id_cliente_core,
+            fp.id_categoria),
+     todo_bsf AS
+  (SELECT f.id_cliente_core,
+          f.id_categoria,
+          f.fecha_max,
+          c.count
+   FROM fecha_max_bsf f
+   INNER JOIN cat_count_bsf c ON f.id_cliente_core = c.id_cliente_core
+   AND f.id_categoria = c.id_categoria)
+ insert into de_qua_3ref.ft_prospectos partition (fecha_proceso)
+SELECT rcb.id_cliente_core_protegido AS id_prospecto,
+       tb.id_categoria AS categoria,
+       CAST(tb.fecha_max AS VARCHAR(8)) AS fecha_max_consumo,
+       CAST(tb.count AS INT) AS cantidad_consumos,
+       '20211108' as fecha_proceso
+FROM todo_ber tb
+INNER JOIN de_ber_3ref.rel_cliente_core_protegido rcb ON tb.id_cliente_core = rcb.id_cliente_core
+UNION ALL
+SELECT rcf.id_cliente_core_protegido AS id_prospecto,
+       tf.id_categoria AS categoria,
+       CAST(tf.fecha_max AS VARCHAR(8)) AS fecha_max_consumo,
+       CAST(tf.count AS INT) AS cantidad_consumos,
+       '20211108' as fecha_proceso
+FROM todo_bsf tf
+INNER JOIN de_bsf_3ref.rel_cliente_core_protegido rcf ON tf.id_cliente_core = rcf.id_cliente_core
+; 

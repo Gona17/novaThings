@@ -61,3 +61,35 @@ SELECT DISTINCT cast(csd.id_cliente AS bigint) AS id_cliente_core,
 FROM de_qua_1raw.cliente_seguros_dir csd
 WHERE (csd.entidad = 'dir'
        AND csd.fecha_proceso = ${fechadir})
+
+
+
+
+--NUEVA
+
+SELECT DISTINCT cast(cs.id_cliente AS bigint) AS id_cliente_core,
+                cast(cs.cuit_l AS bigint) AS id_persona,
+                cast(trim(cs.n_cliente) AS string),
+                cast(trim(cs.a_cliente) AS string),
+                CAST(substr(trim(cs.cuit_l),3,8) AS BIGINT) AS nro_dni,
+                CAST(cs.num_pol AS bigint) AS nro_poliza,
+                trim(cs.cod_ramo) AS cod_ramo,
+                trim(cs.ramo),
+                trim(cs.cod_producto),
+                cs.producto,
+                CAST(cs.poliza_renov AS bigint) AS nro_poliza_renovada,
+                cs.vig_desde AS fecha_vig_desde,
+                cs.vig_hasta AS fecha_vig_hasta,
+                cs.fecha_alta,
+                cs.fecha_baja,
+                cs.fecha_emision_poliza,
+                cs.fecha_ult_mod AS fecha_ult_modificacion,
+                cs.forma_pago,
+                cs.mail AS mail,
+                cs.tipo_tel_1 AS tipo_telefono_1,
+                cs.tel_1 AS telefono_1,
+                cs.tipo_tel_2 AS tipo_telefono_2,
+                cs.tel_2 AS telefono_2,
+                cs.canal
+FROM de_qua_1raw.cliente_seguros cs
+WHERE cs.entidad = '$ENTIDAD'

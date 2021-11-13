@@ -14,3 +14,5 @@ CREATE EXTERNAL TABLE de_bsf_3ref.ft_nbo_qualia_categorias_consumo(
 	STORED AS PARQUET 
 	LOCATION
 	  'hdfs://nameservice1/user/admin/dev/bsf/03-ref/qualia/ft_nbo_qualia_categorias_consumo'
+	  TBLPROPERTIES ('external.table.purge'='true');
+	  

@@ -1,23 +1,25 @@
-CREATE EXTERNAL TABLE de_qua_3ref.ft_resultado_audiencias(
+	CREATE EXTERNAL TABLE de_qua_3ref.ft_resultado_audiencias(
 	  id_prospecto string COMMENT 'Número de identificación del cliente protegido', 
 	  id_persona bigint COMMENT 'Id persona del cliente', 
 	  id_campania_sms int COMMENT 'Id autonumerico (tomando como base la fecha de proceso de la audiencia publicitaria)', 
-	  id_campania_cc int COMMENT 'Id autonumerico',
-	  id_categoria int COMMENT 'Categoría de consumo del movimiento según segmentación Qualia', 
+	  id_campania_cc int COMMENT 'Id autonumerico', 
+	  id_categoria STRING COMMENT 'Categoría de consumo del movimiento según segmentación Qualia', 
 	  descripcion_categoria string COMMENT 'Descripcion de la categoria (ver solapa variables con id_categoria )', 
-	  q_consumos int COMMENT 'Cantidad de consumos según las transacciones', 
+	  q_consumos STRING COMMENT 'Cantidad de consumos según las transacciones', 
 	  ult_transaccion string COMMENT 'Máxima fecha de transaccion', 
 	  producto_ofrecido string COMMENT 'Producto que se le ofreció en la campaña al cliente', 
 	  canal string COMMENT 'Teléfono: cuando es celular o fijo, Mail: cuando el campo es email ', 
 	  resultado_campania varchar(1) COMMENT 'Indica si realizo click o no en el mensaje de SMS. O la rsta en callcenter', 
-	  fecha_click string COMMENT 'Indica la fecha que realizo click, Si realizo_click= 1, de lo contrario la fecha es nula', 
-	  mensaje_sms string comment 'Mensaje respondido por algunos clientes',
+	  fecha_resultado string COMMENT 'Indica la fecha que realizo click, Si realizo_click= 1, de lo contrario la fecha es nula', 
+	  mensaje_resultado string COMMENT 'Mensaje respondido por algunos clientes', 
 	  adquirio_producto string COMMENT 'Si el cliente adquirió el producto entonces "S", else "N"', 
 	  producto_adquirido string COMMENT 'Si el cliente adquirió el producto, muestra el producto', 
-	  fecha_adquisicion string)
+	  fecha_adquisicion string,
+	  canal_venta int comment 'Canal por el cual se realizó la venta, si fue por SMS'
+	  )
 	COMMENT 'Fecha en la que el cliente adquirió el producto,'
 	PARTITIONED BY ( 
 	  fecha_proceso varchar(8))
 	STORED AS PARQUET 
 	LOCATION
-	  'hdfs://nameservice1/user/admin/dev/qualia/03-refined/ft_resultado_audiencias';
+	  'hdfs://nameservice1/user/admin/dev/qualia/03-refined/ft_resultado_audiencias'
